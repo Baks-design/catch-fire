@@ -7,7 +7,7 @@ namespace CatchFire
     [Serializable]
     public class SoundData
     {
-        public AudioClip clip;
+        public AudioClip[] clip;
         public AudioMixerGroup mixerGroup;
         public bool loop;
         public bool playOnAwake;

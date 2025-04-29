@@ -1,5 +1,4 @@
 using System.Collections;
-using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -8,54 +7,42 @@ namespace CatchFire
 {
     public class CharactersManager : MonoBehaviour
     {
-        [Header("References")]
-        [SerializeField] CinemachineCamera cinemachine;
+        [Header("Main")]
         [SerializeField] Transform defaultSpawn;
-        [SerializeField] Transform charactersGroup;
+        [SerializeField] Transform spawnGroup;
         [SerializeField] CharacterPersistentData[] charactersData;
-        [SerializeField] Image fadeOverlay;
-        [Header("Settings")]
+        [Header("VFX")]
         [SerializeField] float fadeDuration = 0.3f;
+        [SerializeField] Image fadeOverlay;
         int currentPlayerIndex = 0;
-        Vector3 sharedLastPosition;
-        Quaternion sharedLastRotation;
-        bool isSwitching = false; // Prevents overlapping switches
+        bool isSwitching = false;
         InputProvider inputProvider;
 
         void Awake()
         {
-            inputProvider = new InputProvider(); //TODO: mOVE TO own class
-
-            fadeOverlay.color = new Color(0f, 0f, 0f, 0f);
-
-            sharedLastPosition = defaultSpawn.position;
-            sharedLastRotation = defaultSpawn.rotation;
-
+            AssignInput();
+            SetVars();
             InitializeCharacters();
         }
+
+        void AssignInput()
+        {
+            inputProvider = new InputProvider();
+            inputProvider.SwitchActionSetup();
+        }
+
+        void SetVars() => fadeOverlay.color = new Color(0f, 0f, 0f, 0f);
 
         void InitializeCharacters()
         {
             for (var i = 0; i < charactersData.Length; i++)
             {
-                // Instantiate all characters but only activate the first one
-                var shouldActivate = i == 0;
-
                 charactersData[i].instance = Instantiate(
                     charactersData[i].prefab,
                     defaultSpawn.position,
                     defaultSpawn.rotation,
-                    charactersGroup
-                );
-
-                charactersData[i].instance.SetActive(shouldActivate);
-                charactersData[i].isActive = shouldActivate;
-
-                if (shouldActivate)
-                {
-                    SetupCameraFollow(charactersData[i].instance);
-                    currentPlayerIndex = i;
-                }
+                    spawnGroup);
+                charactersData[i].instance.SetActive(i == 0);
             }
         }
 
@@ -63,81 +50,47 @@ namespace CatchFire
 
         void OnDisable() => inputProvider.SwitchCharacterPressed.started -= SwitchCharacter;
 
-        void SwitchCharacter(InputAction.CallbackContext context) => StartCoroutine(SwitchWithTransition());
+        void SwitchCharacter(InputAction.CallbackContext context) => StartCoroutine(SwitchCharacterRoutine());
 
-        IEnumerator SwitchWithTransition()
-        {            
+        IEnumerator SwitchCharacterRoutine()
+        {
             if (charactersData.Length <= 1 || isSwitching) yield break;
 
             isSwitching = true;
 
-            // 1. Save and deactivate current
-            if (charactersData[currentPlayerIndex].instance != null)
-            {
-                sharedLastPosition = charactersData[currentPlayerIndex].instance.transform.position;
-                sharedLastRotation = charactersData[currentPlayerIndex].instance.transform.rotation;
-                charactersData[currentPlayerIndex].instance.SetActive(false);
-                charactersData[currentPlayerIndex].isActive = false;
-            }
-
-            // 2. Fade out
+            //Fade out
             if (fadeOverlay != null)
-                yield return StartCoroutine(FadeScreen(1f));
-            else
-                yield return Helpers.GetWaitForSeconds(fadeDuration / 2f);
+                yield return StartCoroutine(Fade(1f)); 
 
-            // 3. Switch index
+            var lastPosition = charactersData[currentPlayerIndex].instance.transform.position;
+
+            //Switch characters
+            charactersData[currentPlayerIndex].instance.SetActive(false);
             currentPlayerIndex = (currentPlayerIndex + 1) % charactersData.Length;
 
-            // 4. Activate new character
-            var newChar = charactersData[currentPlayerIndex];
-            if (newChar.instance == null)
-            {
-                newChar.instance = Instantiate(
-                    newChar.prefab,
-                    sharedLastPosition,
-                    sharedLastRotation,
-                    charactersGroup
-                );
-                SetupCameraFollow(newChar.instance);
-            }
-            else
-                newChar.instance.transform.SetPositionAndRotation(sharedLastPosition, sharedLastRotation);
+            //Activate new character at previous position
+            charactersData[currentPlayerIndex].instance.SetActive(true);
+            charactersData[currentPlayerIndex].instance.transform.position = lastPosition;
 
-            newChar.instance.SetActive(true);
-            newChar.isActive = true;
-
-            // 5. Fade in
+            //Fade in
             if (fadeOverlay != null)
-                yield return StartCoroutine(FadeScreen(0f));
+                yield return StartCoroutine(Fade(0f));
 
             isSwitching = false;
         }
 
-        void SetupCameraFollow(GameObject target) => cinemachine.Target.TrackingTarget = target.transform;
-
-        IEnumerator FadeScreen(float targetAlpha)
+        IEnumerator Fade(float targetAlpha)
         {
-            if (fadeOverlay == null) yield break;
+            var startAlpha = fadeOverlay.color.a;
+            var elapsed = 0f;
 
-            var fadeColor = fadeOverlay.color;
-            var currentAlpha = fadeColor.a;
-            var remaining = Mathf.Abs(targetAlpha - currentAlpha);
-            // Half-life set to reach 99% complete in fadeDuration
-            var halfLife = fadeDuration * 0.1448f; // -ln(0.01)/ln(2)
-
-            const float epsilon = 0.001f; // Completion threshold
-            while (remaining > epsilon)
+            while (elapsed < fadeDuration)
             {
-                currentAlpha = Maths.ExpDecay(currentAlpha, targetAlpha, Time.deltaTime, halfLife);
-                fadeColor.a = currentAlpha;
-                fadeOverlay.color = fadeColor;
-                remaining = Mathf.Abs(targetAlpha - currentAlpha);
+                elapsed += Time.deltaTime;
+                var newAlpha = Mathf.Lerp(startAlpha, targetAlpha, elapsed / fadeDuration);
+                fadeOverlay.color = new Color(0f, 0f, 0f, newAlpha);
                 yield return null;
             }
-
-            fadeColor.a = targetAlpha;
-            fadeOverlay.color = fadeColor;
         }
     }
 }

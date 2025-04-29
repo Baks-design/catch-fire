@@ -19,7 +19,9 @@ namespace CatchFire
         public void Initialize(SoundData data)
         {
             Data = data;
-            audioSource.clip = data.clip;
+
+            foreach (var item in data.clip)
+                audioSource.clip = item;
             audioSource.outputAudioMixerGroup = data.mixerGroup;
             audioSource.loop = data.loop;
             audioSource.playOnAwake = data.playOnAwake;

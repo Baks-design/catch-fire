@@ -1,0 +1,76 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1d99aa073a523341a8af2b7ce82d76c, type: 3}
+  m_Name: Concrete Surface
+  m_EditorClassIdentifier: 
+  surfaceType: 0
+  footstepSounds:
+  - clip:
+    - {fileID: 8300000, guid: 72f526a6a9890f643a88e85a61c86c8a, type: 3}
+    - {fileID: 8300000, guid: 85016e0f2b01da248b9663dd49a161b0, type: 3}
+    - {fileID: 8300000, guid: 186de84b3207156479abe98f4958fed0, type: 3}
+    - {fileID: 8300000, guid: 1a91fcd19acf1e54bba0945d9f390849, type: 3}
+    - {fileID: 8300000, guid: 14e8a8d2158bec840b56c54f5266e692, type: 3}
+    - {fileID: 8300000, guid: 29841e7d5bbfb5b419c9ad16ca8bc4c1, type: 3}
+    - {fileID: 8300000, guid: dd1af302b8902684d9381de1f2d3a5af, type: 3}
+    - {fileID: 8300000, guid: 67c8b33e424ccdc4486edf538ab91c5a, type: 3}
+    - {fileID: 8300000, guid: 274649b0e221539409070ebf6c18918b, type: 3}
+    - {fileID: 8300000, guid: a3194b8bbc96ef84fab1f98f4b7dae3e, type: 3}
+    mixerGroup: {fileID: 4796280562796518393, guid: bd3bb77400eda994fa6085a006ed2cd7, type: 2}
+    loop: 0
+    playOnAwake: 0
+    frequentSound: 0
+    mute: 0
+    bypassEffects: 0
+    bypassListenerEffects: 0
+    bypassReverbZones: 0
+    priority: 128
+    volume: 1
+    pitch: 1
+    panStereo: 0
+    spatialBlend: 0
+    reverbZoneMix: 1
+    dopplerLevel: 1
+    spread: 0
+    minDistance: 1
+    maxDistance: 500
+    ignoreListenerVolume: 0
+    ignoreListenerPause: 0
+    rolloffMode: 0
+  landSounds:
+  - clip:
+    - {fileID: 8300000, guid: ff697d3070687ce4583faa0561a145a2, type: 3}
+    - {fileID: 8300000, guid: ff697d3070687ce4583faa0561a145a2, type: 3}
+    - {fileID: 8300000, guid: ff697d3070687ce4583faa0561a145a2, type: 3}
+    - {fileID: 8300000, guid: ff697d3070687ce4583faa0561a145a2, type: 3}
+    - {fileID: 8300000, guid: ff697d3070687ce4583faa0561a145a2, type: 3}
+    mixerGroup: {fileID: 4796280562796518393, guid: bd3bb77400eda994fa6085a006ed2cd7, type: 2}
+    loop: 0
+    playOnAwake: 0
+    frequentSound: 0
+    mute: 0
+    bypassEffects: 0
+    bypassListenerEffects: 0
+    bypassReverbZones: 0
+    priority: 128
+    volume: 1
+    pitch: 1
+    panStereo: 0
+    spatialBlend: 0
+    reverbZoneMix: 1
+    dopplerLevel: 1
+    spread: 0
+    minDistance: 1
+    maxDistance: 500
+    ignoreListenerVolume: 0
+    ignoreListenerPause: 0
+    rolloffMode: 0

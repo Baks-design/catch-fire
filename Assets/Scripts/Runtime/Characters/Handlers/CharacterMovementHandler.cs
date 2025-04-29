@@ -10,9 +10,12 @@ namespace CatchFire
         readonly Camera mainCamera;
         float targetRotation;
         float rotationVelocity;
+        const float offset = 0.1f;
+        const float round = 1000f;
 
-        public float CurrentSpeed { get; private set; }
-        public float CurrentInputMagnitude { get; private set; }
+        public float CurrentSpeed { get; set; }
+        public float CurrentInputMagnitude { get; set; }
+        public float TargetSpeed { get; set; }
 
         public CharacterMovementHandler(
             CharacterData data,
@@ -28,11 +31,13 @@ namespace CatchFire
 
         public void HandleMovement(Vector2 moveInput, bool isSprinting, float deltaTime)
         {
-            var targetSpeed = isSprinting ? data.sprintSpeed : data.moveSpeed;
-            if (moveInput == Vector2.zero)
-                targetSpeed = 0f;
+            Debug.Log(moveInput);
 
-            CurrentSpeed = CalculateSpeed(controller.velocity, targetSpeed, moveInput, deltaTime);
+            TargetSpeed = isSprinting ? data.sprintSpeed : data.moveSpeed;
+            if (moveInput == Vector2.zero)
+                TargetSpeed = 0f;
+
+            CurrentSpeed = CalculateSpeed(controller.velocity, TargetSpeed, moveInput, deltaTime);
 
             if (moveInput != Vector2.zero)
                 UpdateRotation(moveInput);
@@ -40,18 +45,24 @@ namespace CatchFire
             MoveHorizontalVelocity(deltaTime);
         }
 
-        float CalculateSpeed(Vector3 currentVelocity, float targetSpeed, Vector2 moveInput, float deltaTime) //FIXME
+        float CalculateSpeed(Vector3 currentVelocity, float targetSpeed, Vector2 moveInput, float deltaTime)
         {
             var currentHorizontalSpeed = new Vector3(currentVelocity.x, 0f, currentVelocity.z).magnitude;
 
             CurrentInputMagnitude = data.analogMovement ? moveInput.magnitude : 1f;
 
-            currentHorizontalSpeed = Maths.ExpDecay(
-                currentHorizontalSpeed,
-                targetSpeed * CurrentInputMagnitude,
-                data.speedChangeRate,
-                deltaTime
-            );
+            if (currentHorizontalSpeed < targetSpeed - offset || currentHorizontalSpeed > targetSpeed + offset)
+            {
+
+                currentHorizontalSpeed = Mathf.Lerp(
+                    currentHorizontalSpeed,
+                    targetSpeed * CurrentInputMagnitude,
+                    data.speedChangeRate * deltaTime
+                );
+                currentHorizontalSpeed = Mathf.Round(currentHorizontalSpeed * round) / round;
+            }
+            else
+                currentHorizontalSpeed = targetSpeed;
 
             return currentHorizontalSpeed;
         }

@@ -10,11 +10,20 @@ namespace CatchFire
         => this.controller = controller;
 
         public void Update()
-        {            
+        {
+            controller.GroundChecker.CheckGrounded();
+
             controller.JumpHandler.HandleJump(
                 controller.GroundChecker.Grounded,
                 controller.InputProvider.JumpPressed,
-                Time.deltaTime);
+                Time.deltaTime
+            );
+
+            controller.MovementHandler.HandleMovement(
+                controller.InputProvider.MoveInput,
+                controller.InputProvider.IsSprinting,
+                Time.deltaTime
+            );
         }
     }
 }

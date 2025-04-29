@@ -16,13 +16,22 @@ namespace CatchFire
         protected override void Awake()
         {
             base.Awake();
+            AssignInputs();
             InitComponents();
             SetupStateMachine();
         }
 
-        void InitComponents()
+        void AssignInputs()
         {
             InputProvider = new InputProvider();
+            InputProvider.MoveActionSetup();
+            InputProvider.SprintActionSetup();
+            InputProvider.JumpActionSetup();
+            InputProvider.SetCursor(true);
+        }
+
+        void InitComponents()
+        {
             GroundChecker = new CharacterGroundChecker(data, transform);
             JumpHandler = new CharacterJumpHandler(data, controller);
             MovementHandler = new CharacterMovementHandler(data, controller, transform, Camera.main);
@@ -42,13 +51,6 @@ namespace CatchFire
             stateMachine.SetState(falling);
         }
 
-        protected override void Update()
-        {
-            base.Update();
-
-            Debug.Log("Current" + stateMachine.CurrentState);
-        }
-
         void OnControllerColliderHit(ControllerColliderHit hit)
         {
             if (data.canPush)
@@ -57,16 +59,17 @@ namespace CatchFire
 
         void OnDrawGizmosSelected()
         {
-            Gizmos.color = GroundChecker.Grounded ?
-                new Color(0f, 1f, 0f, 0.35f) :
-                new Color(1f, 0f, 0f, 0.35f);
+            Gizmos.color = GroundChecker.Grounded ? Color.green : Color.red;
 
             var pos = new Vector3(
-                controller.transform.position.x,
-                controller.transform.position.y - data.groundedOffset,
-                controller.transform.position.z);
+                transform.position.x,
+                transform.position.y - data.groundedOffset,
+                transform.position.z);
 
             Gizmos.DrawSphere(pos, data.groundedRadius);
         }
     }
 }
+
+//TODO: Separate Gravity and jump
+//TODO: Switch Lerp by Decay

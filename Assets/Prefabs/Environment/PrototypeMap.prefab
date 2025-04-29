@@ -67,9 +67,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -1035495659877234040, guid: be3ed9816d019ff4a85901f7a3aae376, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5137043069926549367}
+    - targetCorrespondingSourceObject: {fileID: -1035495659877234040, guid: be3ed9816d019ff4a85901f7a3aae376, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 276607334265704993}
     - targetCorrespondingSourceObject: {fileID: -1885343282542338833, guid: be3ed9816d019ff4a85901f7a3aae376, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3965252306837447694}
+    - targetCorrespondingSourceObject: {fileID: -1885343282542338833, guid: be3ed9816d019ff4a85901f7a3aae376, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2559217321569615454}
   m_SourcePrefab: {fileID: 100100000, guid: be3ed9816d019ff4a85901f7a3aae376, type: 3}
 --- !u!1 &5317103314229426644 stripped
 GameObject:
@@ -98,6 +104,19 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 1728524496580630498, guid: be3ed9816d019ff4a85901f7a3aae376, type: 3}
+--- !u!114 &276607334265704993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5317103314229426644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc315a0a4c6d2fc43a212d6d5edbbbb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <SurfaceType>k__BackingField: 0
 --- !u!1 &6755084027253256115 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -1885343282542338833, guid: be3ed9816d019ff4a85901f7a3aae376, type: 3}
@@ -125,3 +144,16 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -494750335933397098, guid: be3ed9816d019ff4a85901f7a3aae376, type: 3}
+--- !u!114 &2559217321569615454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6755084027253256115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc315a0a4c6d2fc43a212d6d5edbbbb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <SurfaceType>k__BackingField: 1

@@ -7,7 +7,7 @@ namespace CatchFire
         readonly CharacterData data;
         readonly Transform transform;
 
-        public bool Grounded { get; private set; }
+        public bool Grounded { get; private set; } = true;
 
         public CharacterGroundChecker(CharacterData data, Transform transform)
         {

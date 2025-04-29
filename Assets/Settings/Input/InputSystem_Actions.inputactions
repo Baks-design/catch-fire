@@ -6,6 +6,15 @@
             "id": "c69eb75d-442a-45f4-855a-007e2617d74f",
             "actions": [
                 {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "99365c07-a86b-4a19-b268-935126125eb1",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Cancel",
                     "type": "Button",
                     "id": "d7936dad-1349-43ea-bf7f-234c1d74e22c",
@@ -62,17 +71,6 @@
             ],
             "bindings": [
                 {
-                    "name": "",
-                    "id": "a99e27b4-cbc8-4a4c-815c-b74f17a1c72c",
-                    "path": "<Gamepad>/leftStick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
                     "name": "WASD",
                     "id": "738b6569-0f1a-40e2-9310-c2c97f82661b",
                     "path": "Dpad",
@@ -95,31 +93,9 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "up",
-                    "id": "2dc5cd3f-a41b-4dad-992a-4d95f7d0873b",
-                    "path": "<Keyboard>/upArrow",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
                     "name": "down",
                     "id": "b8357e89-2c38-4e9d-a31b-f1f77fb7561d",
                     "path": "<Keyboard>/s",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "b2253cab-a186-4521-9bc4-04578c6da924",
-                    "path": "<Keyboard>/downArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
@@ -139,17 +115,6 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "left",
-                    "id": "8e785d46-7ee9-43c8-8730-f3430dc51503",
-                    "path": "<Keyboard>/leftArrow",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
                     "name": "right",
                     "id": "188de28e-fa48-4e22-a7ba-d83599309c8b",
                     "path": "<Keyboard>/d",
@@ -161,24 +126,13 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "right",
-                    "id": "3617fba2-7167-42ce-9866-fb0cc0126846",
-                    "path": "<Keyboard>/rightArrow",
+                    "name": "",
+                    "id": "a99e27b4-cbc8-4a4c-815c-b74f17a1c72c",
+                    "path": "<Gamepad>/leftStick",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "",
-                    "id": "0cd41063-488d-4bb5-bd48-7ba334555d92",
-                    "path": "<Gamepad>/rightStick",
-                    "interactions": "",
-                    "processors": "ScaleVector2(x=100,y=100)",
                     "groups": ";Gamepad",
-                    "action": "Look",
+                    "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -187,8 +141,19 @@
                     "id": "8aeaa51b-c3d7-43ea-b242-09db879f412c",
                     "path": "<Pointer>/delta",
                     "interactions": "",
-                    "processors": "DeltaTimeScale,ScaleVector2(x=0.1,y=0.1)",
+                    "processors": "InvertVector2(invertX=false),ScaleVector2(x=0.05,y=0.05)",
                     "groups": ";Keyboard&Mouse",
+                    "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0cd41063-488d-4bb5-bd48-7ba334555d92",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "DeltaTimeScale,ScaleVector2",
+                    "groups": ";Gamepad",
                     "action": "Look",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -228,11 +193,33 @@
                 },
                 {
                     "name": "",
+                    "id": "f212ffa6-0380-4c65-97c2-ecb6ec72d57b",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "SwitchCharacter",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "d061af45-5725-4b63-869b-d00b9920fcf2",
                     "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ebe5e9fe-b4a6-4e3f-b1cd-cea8a717333d",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
                     "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -245,6 +232,39 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Sprint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cc21f8d1-2773-4f7b-8768-682792be6d74",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Sprint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "feaf10d6-17d1-4a1d-b970-d9a5c5feea18",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "eee806e2-a424-4d67-8e47-d415a7da8556",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -276,7 +296,7 @@
                     "name": "Cancel",
                     "type": "Button",
                     "id": "15cef263-9014-4fd5-94d9-4e4a6234a6ef",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -340,6 +360,15 @@
                     "type": "PassThrough",
                     "id": "9caa3d8a-6b2f-4e8e-8bad-6ede561bd9be",
                     "expectedControlType": "Quaternion",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Unpause",
+                    "type": "Button",
+                    "id": "661abe03-84df-48fb-9e80-42e3fe9392b2",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -761,6 +790,17 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "TrackedDeviceOrientation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "304d5a0a-297e-41a6-a50b-eecd5b00730b",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Unpause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
