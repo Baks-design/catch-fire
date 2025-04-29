@@ -46,14 +46,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cinemachine: {fileID: 0}
   defaultSpawn: {fileID: 0}
-  players:
-  - prefab: {fileID: 297666767168906261, guid: 2c2d0be8bb4bc8e4bb9a1aff0ec13140, type: 3}
-    lastPosition: {x: 0, y: 0, z: 0}
-    lastRotation: {x: 0, y: 0, z: 0, w: 0}
-    isActive: 0
+  charactersData:
+  - prefab: {fileID: 3576245321243747931, guid: 815e1678fbd9f6940b151131c98475ba, type: 3}
     instance: {fileID: 0}
-  - prefab: {fileID: 1468745111455036027, guid: 665111bacef45d149b42eec6ba46165b, type: 3}
-    lastPosition: {x: 0, y: 0, z: 0}
-    lastRotation: {x: 0, y: 0, z: 0, w: 0}
     isActive: 0
+  - prefab: {fileID: 7201813979705476055, guid: 7dd665fda3bb7a44aa840a33d84a2dfd, type: 3}
     instance: {fileID: 0}
+    isActive: 0
+  fadeOverlay: {fileID: 0}
+  fadeDuration: 0.3

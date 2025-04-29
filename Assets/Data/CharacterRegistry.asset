@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: CharacterRegistry
   m_EditorClassIdentifier: 
   allCharacters:
-  - {fileID: 11400000, guid: cc2f4ea50b955eb4c9d2ebd6ee30cc22, type: 2}
   - {fileID: 11400000, guid: 747ab4507df9012428e8bcaa7f5d44a6, type: 2}
+  - {fileID: 11400000, guid: 1904582ea3d37274fb73d4e3b161cfe0, type: 2}

@@ -9,7 +9,11 @@ namespace Unity.Cinemachine.Samples
         public float WaitTimeAtStart = 1;
 
         CinemachineSplineCart m_Cart;
+#pragma warning disable UDR0001 // Domain Reload Analyzer
+
         static bool s_LeaderWasSlowed;
+#pragma warning restore UDR0001 // Domain Reload Analyzer
+
         bool m_IsTired;
         float m_StartTime;
 

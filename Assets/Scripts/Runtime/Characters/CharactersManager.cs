@@ -11,104 +11,137 @@ namespace CatchFire
         [Header("References")]
         [SerializeField] CinemachineCamera cinemachine;
         [SerializeField] Transform defaultSpawn;
-        [SerializeField] PlayerData[] players;
-        [SerializeField] Image fadeOverlay; // Optional UI fade overlay
+        [SerializeField] Transform charactersGroup;
+        [SerializeField] CharacterPersistentData[] charactersData;
+        [SerializeField] Image fadeOverlay;
         [Header("Settings")]
         [SerializeField] float fadeDuration = 0.3f;
         int currentPlayerIndex = 0;
-        InputAction switchCharacter;
         Vector3 sharedLastPosition;
         Quaternion sharedLastRotation;
         bool isSwitching = false; // Prevents overlapping switches
+        InputProvider inputProvider;
 
         void Awake()
         {
+            inputProvider = new InputProvider(); //TODO: mOVE TO own class
+
+            fadeOverlay.color = new Color(0f, 0f, 0f, 0f);
+
             sharedLastPosition = defaultSpawn.position;
             sharedLastRotation = defaultSpawn.rotation;
-            SpawnPlayer(0);
+
+            InitializeCharacters();
         }
 
-        void OnEnable()
+        void InitializeCharacters()
         {
-            switchCharacter = InputSystem.actions.FindAction("Player/SwitchCharacter");
-            switchCharacter.started += SwitchCharacter;
+            for (var i = 0; i < charactersData.Length; i++)
+            {
+                // Instantiate all characters but only activate the first one
+                var shouldActivate = i == 0;
+
+                charactersData[i].instance = Instantiate(
+                    charactersData[i].prefab,
+                    defaultSpawn.position,
+                    defaultSpawn.rotation,
+                    charactersGroup
+                );
+
+                charactersData[i].instance.SetActive(shouldActivate);
+                charactersData[i].isActive = shouldActivate;
+
+                if (shouldActivate)
+                {
+                    SetupCameraFollow(charactersData[i].instance);
+                    currentPlayerIndex = i;
+                }
+            }
         }
 
-        void OnDisable() => switchCharacter.started -= SwitchCharacter;
+        void OnEnable() => inputProvider.SwitchCharacterPressed.started += SwitchCharacter;
 
-        void SwitchCharacter(InputAction.CallbackContext context)
-        {
-            if (players.Length <= 1 || isSwitching) return;
+        void OnDisable() => inputProvider.SwitchCharacterPressed.started -= SwitchCharacter;
 
-            StartCoroutine(SwitchWithTransition());
-        }
+        void SwitchCharacter(InputAction.CallbackContext context) => StartCoroutine(SwitchWithTransition());
 
         IEnumerator SwitchWithTransition()
-        {
+        {            
+            if (charactersData.Length <= 1 || isSwitching) yield break;
+
             isSwitching = true;
 
-            // 1. Save current position before switching
-            if (players[currentPlayerIndex].instance != null)
+            // 1. Save and deactivate current
+            if (charactersData[currentPlayerIndex].instance != null)
             {
-                sharedLastPosition = players[currentPlayerIndex].instance.transform.position;
-                sharedLastRotation = players[currentPlayerIndex].instance.transform.rotation;
+                sharedLastPosition = charactersData[currentPlayerIndex].instance.transform.position;
+                sharedLastRotation = charactersData[currentPlayerIndex].instance.transform.rotation;
+                charactersData[currentPlayerIndex].instance.SetActive(false);
+                charactersData[currentPlayerIndex].isActive = false;
             }
 
-            // 2. Optional: Fade out
+            // 2. Fade out
             if (fadeOverlay != null)
-                yield return StartCoroutine(FadeScreen(1f)); // Fade to black
+                yield return StartCoroutine(FadeScreen(1f));
             else
-                yield return new WaitForSeconds(fadeDuration / 2); // Minimal delay
+                yield return Helpers.GetWaitForSeconds(fadeDuration / 2f);
 
-            // 3. Destroy old character
-            if (players[currentPlayerIndex].instance != null)
-                Destroy(players[currentPlayerIndex].instance);
+            // 3. Switch index
+            currentPlayerIndex = (currentPlayerIndex + 1) % charactersData.Length;
 
-            // 4. Switch to next character
-            currentPlayerIndex = (currentPlayerIndex + 1) % players.Length;
+            // 4. Activate new character
+            var newChar = charactersData[currentPlayerIndex];
+            if (newChar.instance == null)
+            {
+                newChar.instance = Instantiate(
+                    newChar.prefab,
+                    sharedLastPosition,
+                    sharedLastRotation,
+                    charactersGroup
+                );
+                SetupCameraFollow(newChar.instance);
+            }
+            else
+                newChar.instance.transform.SetPositionAndRotation(sharedLastPosition, sharedLastRotation);
 
-            // 5. Spawn new character at shared position
-            SpawnPlayer(currentPlayerIndex);
+            newChar.instance.SetActive(true);
+            newChar.isActive = true;
 
-            // 6. Optional: Fade in
+            // 5. Fade in
             if (fadeOverlay != null)
-                yield return StartCoroutine(FadeScreen(0f)); // Fade back in
+                yield return StartCoroutine(FadeScreen(0f));
 
             isSwitching = false;
         }
+
+        void SetupCameraFollow(GameObject target) => cinemachine.Target.TrackingTarget = target.transform;
 
         IEnumerator FadeScreen(float targetAlpha)
         {
             if (fadeOverlay == null) yield break;
 
-            var startAlpha = fadeOverlay.color.a;
-            var elapsed = 0f;
+            var fadeColor = fadeOverlay.color;
+            var currentAlpha = fadeColor.a;
+            var remaining = Mathf.Abs(targetAlpha - currentAlpha);
+            // Half-life set to reach 99% complete in fadeDuration
+            var halfLife = fadeDuration * 0.1448f; // -ln(0.01)/ln(2)
 
-            while (elapsed < fadeDuration)
+            const float epsilon = 0.001f; // Completion threshold
+            while (remaining > epsilon)
             {
-                elapsed += Time.deltaTime;
-                var newAlpha = Mathf.Lerp(startAlpha, targetAlpha, elapsed / fadeDuration);
-                fadeOverlay.color = new Color(0f, 0f, 0f, newAlpha);
+                currentAlpha = Maths.ExpDecay(currentAlpha, targetAlpha, Time.deltaTime, halfLife);
+                fadeColor.a = currentAlpha;
+                fadeOverlay.color = fadeColor;
+                remaining = Mathf.Abs(targetAlpha - currentAlpha);
                 yield return null;
             }
+
+            fadeColor.a = targetAlpha;
+            fadeOverlay.color = fadeColor;
         }
-
-        void SpawnPlayer(int index)
-        {
-            if (index < 0 || index >= players.Length) return;
-
-            players[index].instance = Instantiate(players[index].prefab, sharedLastPosition, sharedLastRotation);
-            players[index].isActive = true;
-
-            SetupCameraFollow(players[index].instance);
-        }
-
-        void SetupCameraFollow(GameObject target) => cinemachine.Target.TrackingTarget = target.transform;
     }
 }
 
 //Implement add/remove characters by conditions
 //Implement detection by check others
 //Implement UI
-//Add WaitFor class
-//Add FadeIn Render

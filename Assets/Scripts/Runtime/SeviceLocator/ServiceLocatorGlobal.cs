@@ -1,12 +1,12 @@
 using UnityEngine;
 
-namespace UnityServiceLocator {
+namespace CatchFire
+{
     [AddComponentMenu("ServiceLocator/ServiceLocator Global")]
-    public class ServiceLocatorGlobal : Bootstrapper {
+    public class ServiceLocatorGlobal : Bootstrapper
+    {
         [SerializeField] bool dontDestroyOnLoad = true;
-        
-        protected override void Bootstrap() {
-            Container.ConfigureAsGlobal(dontDestroyOnLoad);
-        }
+
+        protected override void Bootstrap() => Container.ConfigureAsGlobal(dontDestroyOnLoad);
     }
 }

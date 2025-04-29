@@ -8,6 +8,12 @@ namespace CatchFire
     {
         public List<CharacterData> allCharacters = new();
 
-        public CharacterData GetCharacterById(string id) => allCharacters.Find(c => c.characterID == id);
+        public CharacterData GetCharacterById(string id)
+        {
+            foreach (var character in allCharacters)
+                if (character.characterID == id)
+                    return character;
+            return null;
+        }
     }
 }
