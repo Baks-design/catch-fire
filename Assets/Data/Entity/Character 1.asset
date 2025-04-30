@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28b6dd4cfca9edb4f8e9f7ba9d96b2e0, type: 3}
   m_Name: Character 1
   m_EditorClassIdentifier: 
-  characterID: 2
+  characterID: 1
   analogMovement: 0
   moveSpeed: 2
   sprintSpeed: 5.335
   rotationSmoothTime: 0.12
-  speedChangeRate: 10
+  speedChangeRate: 30
   jumpHeight: 1.2
   gravity: -15
   jumpTimeout: 0.5
@@ -31,4 +31,4 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   canPush: 1
-  strength: 1.1
+  strength: 5

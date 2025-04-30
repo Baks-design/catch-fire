@@ -50,7 +50,7 @@ namespace CatchFire
         FootstepSurfaceData GetCurrentSurface()
         {
             FootstepSurfaceData surfaceData = default;
-            
+
             if (Physics.Raycast(
                 tr.position + footstepCheckOffset,
                 Vector3.down,
@@ -86,3 +86,4 @@ namespace CatchFire
         }
     }
 }
+//TODO: Add foot sounds

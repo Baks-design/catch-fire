@@ -44,6 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48a80ecc506b456aabc8a9fe88ddecd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AutoUnparentOnAwake: 1
-  initialPlaylist: []
+  initialPlaylist:
+  - {fileID: 8300000, guid: 660790bb19a97eb4581a05d90c81f369, type: 3}
   musicMixerGroup: {fileID: 24300002, guid: bd3bb77400eda994fa6085a006ed2cd7, type: 2}

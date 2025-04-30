@@ -70,6 +70,6 @@ namespace CatchFire
         }
     }
 }
-
+//TODO: Make Generics abilities
 //TODO: Separate Gravity and jump
 //TODO: Switch Lerp by Decay

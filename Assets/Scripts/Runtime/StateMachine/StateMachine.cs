@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace CatchFire
 {
@@ -20,9 +19,8 @@ namespace CatchFire
             {
                 ChangeState(transition.To);
                 foreach (var node in nodes.Values)
-                {
                     ResetActionPredicateFlags(node.Transitions);
-                }
+                
                 ResetActionPredicateFlags(anyTransitions);
             }
 
@@ -31,16 +29,12 @@ namespace CatchFire
 
         static void ResetActionPredicateFlags(IEnumerable<Transition> transitions)
         {
-            foreach (var transition in transitions.OfType<Transition<ActionPredicate>>())
-            {
-                transition.condition.flag = false;
-            }
+            foreach (var transition in transitions)
+                if (transition is Transition<ActionPredicate> typedTransition)
+                    typedTransition.condition.flag = false;
         }
 
-        public void FixedUpdate()
-        {
-            currentNode.State?.FixedUpdate();
-        }
+        public void FixedUpdate() => currentNode.State?.FixedUpdate();
 
         public void SetState(IState state)
         {
@@ -62,39 +56,31 @@ namespace CatchFire
         }
 
         public void AddTransition<T>(IState from, IState to, T condition)
-        {
-            GetOrAddNode(from).AddTransition(GetOrAddNode(to).State, condition);
-        }
+        => GetOrAddNode(from).AddTransition(GetOrAddNode(to).State, condition);
 
         public void AddAnyTransition<T>(IState to, T condition)
-        {
-            anyTransitions.Add(new Transition<T>(GetOrAddNode(to).State, condition));
-        }
+        => anyTransitions.Add(new Transition<T>(GetOrAddNode(to).State, condition));
 
         Transition GetTransition()
         {
             foreach (var transition in anyTransitions)
                 if (transition.Evaluate())
                     return transition;
-
+        
             foreach (var transition in currentNode.Transitions)
-            {
                 if (transition.Evaluate())
                     return transition;
-            }
-
+            
             return null;
         }
 
         StateNode GetOrAddNode(IState state)
         {
-            var node = nodes.GetValueOrDefault(state.GetType());
-            if (node == null)
+            if (!nodes.TryGetValue(state.GetType(), out var node))
             {
                 node = new StateNode(state);
                 nodes[state.GetType()] = node;
             }
-
             return node;
         }
 
@@ -110,9 +96,7 @@ namespace CatchFire
             }
 
             public void AddTransition<T>(IState to, T predicate)
-            {
-                Transitions.Add(new Transition<T>(to, predicate));
-            }
+            => Transitions.Add(new Transition<T>(to, predicate));
         }
     }
 }

@@ -44,15 +44,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4627b22e2ec13a34ea7e9d197afcab9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cinemachine: {fileID: 0}
   defaultSpawn: {fileID: 0}
-  charactersGroup: {fileID: 0}
+  spawnGroup: {fileID: 0}
   charactersData:
   - prefab: {fileID: 3576245321243747931, guid: 815e1678fbd9f6940b151131c98475ba, type: 3}
     instance: {fileID: 0}
     isActive: 0
-  - prefab: {fileID: 7201813979705476055, guid: 7dd665fda3bb7a44aa840a33d84a2dfd, type: 3}
+  - prefab: {fileID: 3576245321243747931, guid: 45bbd8efdcc49554eafda73e016364b5, type: 3}
     instance: {fileID: 0}
     isActive: 0
-  fadeOverlay: {fileID: 0}
   fadeDuration: 0.3
+  fadeOverlay: {fileID: 0}

@@ -31,8 +31,6 @@ namespace CatchFire
 
         public void HandleMovement(Vector2 moveInput, bool isSprinting, float deltaTime)
         {
-            Debug.Log(moveInput);
-
             TargetSpeed = isSprinting ? data.sprintSpeed : data.moveSpeed;
             if (moveInput == Vector2.zero)
                 TargetSpeed = 0f;

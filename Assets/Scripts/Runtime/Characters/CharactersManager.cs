@@ -60,7 +60,7 @@ namespace CatchFire
 
             //Fade out
             if (fadeOverlay != null)
-                yield return StartCoroutine(Fade(1f)); 
+                yield return StartCoroutine(Fade(1f));
 
             var lastPosition = charactersData[currentPlayerIndex].instance.transform.position;
 
@@ -94,7 +94,8 @@ namespace CatchFire
         }
     }
 }
-
-//Implement add/remove characters by conditions
-//Implement detection by check others
-//Implement UI
+//TODO: Change Lerp
+//TODO: Separate this class
+//TODO: Implement add/remove characters by conditions
+//TODO: Implement detection by check others
+//TODO: Implement UI

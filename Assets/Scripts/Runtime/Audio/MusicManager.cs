@@ -6,8 +6,8 @@ namespace CatchFire
 {
     public class MusicManager : MonoBehaviour
     {
-        [SerializeField] List<AudioClip> initialPlaylist;
         [SerializeField] AudioMixerGroup musicMixerGroup;
+        [SerializeField] List<AudioClip> initialPlaylist;
         const float crossFadeTime = 1f;
         float fading;
         AudioSource current;
