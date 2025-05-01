@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Character 2
   m_EditorClassIdentifier: 
   characterID: 2
-  analogMovement: 0
   moveSpeed: 2
   sprintSpeed: 5.335
-  rotationSmoothTime: 0.12
+  speedDecay: 16
   speedChangeRate: 10
+  rotationSmoothTime: 0.12
   jumpHeight: 1.2
-  gravity: -15
+  gravity: -1
   jumpTimeout: 0.5
   fallTimeout: 0.15
   groundLayers:
@@ -31,4 +31,4 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   canPush: 1
-  strength: 1.1
+  strength: 5

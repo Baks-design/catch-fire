@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace CatchFire
 {
@@ -8,10 +9,11 @@ namespace CatchFire
         [SerializeField] CharacterController controller;
         IRigidBodyPush rigidBodyPush;
 
-        public IInputProvider InputProvider { get; private set; }
+        public IPlayerMapInput InputProvider { get; private set; }
         public IGroundedCheckable GroundChecker { get; private set; }
         public IMovable MovementHandler { get; private set; }
-        public IJumpable JumpHandler { get; private set; }
+        public ICharacterGravity GravityHandler { get; private set; }
+        IInputServices services;
 
         protected override void Awake()
         {
@@ -23,18 +25,19 @@ namespace CatchFire
 
         void AssignInputs()
         {
-            InputProvider = new InputProvider();
+            services = new InputServicesProvider();
+            InputProvider = new PlayerMapInputProvider();
             InputProvider.MoveActionSetup();
             InputProvider.SprintActionSetup();
             InputProvider.JumpActionSetup();
-            InputProvider.SetCursor(true);
         }
 
         void InitComponents()
         {
             GroundChecker = new CharacterGroundChecker(data, transform);
-            JumpHandler = new CharacterJumpHandler(data, controller);
-            MovementHandler = new CharacterMovementHandler(data, controller, transform, Camera.main);
+            GravityHandler = new CharacterGravityHandler(data, controller, GroundChecker);
+            MovementHandler = new CharacterMovementHandler(
+                InputProvider, services, data, controller, transform, Camera.main);
             rigidBodyPush = new CharacterRigidBodyPushHandler(data);
         }
 
@@ -45,10 +48,40 @@ namespace CatchFire
             var jumping = new CharacterJumpingState(this);
 
             At(grounded, falling, () => !GroundChecker.Grounded);
-            At(grounded, jumping, () => InputProvider.JumpPressed);
+            At(jumping, falling, () => !GroundChecker.Grounded && GravityHandler.VerticalVelocity < -0.1f);
             At(falling, grounded, () => GroundChecker.Grounded);
 
             stateMachine.SetState(falling);
+        }
+
+        void OnEnable()
+        {
+            InputProvider.IsSprinting.started += SprintInput;
+            InputProvider.IsSprinting.performed += SprintInput;
+            InputProvider.IsSprinting.canceled += SprintInput;
+        }
+
+        void OnDisable()
+        {
+            InputProvider.IsSprinting.started -= SprintInput;
+            InputProvider.IsSprinting.performed -= SprintInput;
+            InputProvider.IsSprinting.canceled -= SprintInput;
+        }
+
+        void SprintInput(InputAction.CallbackContext context)
+        {
+            switch (context.phase)
+            {
+                case InputActionPhase.Started:
+                    MovementHandler.ApplySprint(true);
+                    break;
+                case InputActionPhase.Performed:
+                    MovementHandler.ApplySprint(true);
+                    break;
+                case InputActionPhase.Canceled:
+                    MovementHandler.ApplySprint(false);
+                    break;
+            }
         }
 
         void OnControllerColliderHit(ControllerColliderHit hit)
@@ -70,6 +103,3 @@ namespace CatchFire
         }
     }
 }
-//TODO: Make Generics abilities
-//TODO: Separate Gravity and jump
-//TODO: Switch Lerp by Decay

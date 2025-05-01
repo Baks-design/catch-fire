@@ -20,8 +20,7 @@ namespace CatchFire
             animationHandler.SetGrounded(movement.GroundChecker.Grounded);
             animationHandler.SetSpeed(movement.MovementHandler.TargetSpeed);
             animationHandler.SetMotionSpeed(movement.MovementHandler.CurrentInputMagnitude);
-            animationHandler.SetJump(movement.JumpHandler.JumpTriggered);
-            animationHandler.SetFreeFall(movement.JumpHandler.FreeFall);
+            animationHandler.SetFreeFall(movement.GravityHandler.FreeFall);
         }
     }
 }

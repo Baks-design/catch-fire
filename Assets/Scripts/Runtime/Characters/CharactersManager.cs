@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 namespace CatchFire
 {
@@ -11,27 +10,22 @@ namespace CatchFire
         [SerializeField] Transform defaultSpawn;
         [SerializeField] Transform spawnGroup;
         [SerializeField] CharacterPersistentData[] charactersData;
-        [Header("VFX")]
-        [SerializeField] float fadeDuration = 0.3f;
-        [SerializeField] Image fadeOverlay;
+        [SerializeField] CharacterTransition characterTransition;
         int currentPlayerIndex = 0;
         bool isSwitching = false;
-        InputProvider inputProvider;
+        IPlayerMapInput inputProvider;
 
         void Awake()
         {
             AssignInput();
-            SetVars();
             InitializeCharacters();
         }
 
         void AssignInput()
         {
-            inputProvider = new InputProvider();
+            inputProvider = new PlayerMapInputProvider();
             inputProvider.SwitchActionSetup();
         }
-
-        void SetVars() => fadeOverlay.color = new Color(0f, 0f, 0f, 0f);
 
         void InitializeCharacters()
         {
@@ -59,8 +53,8 @@ namespace CatchFire
             isSwitching = true;
 
             //Fade out
-            if (fadeOverlay != null)
-                yield return StartCoroutine(Fade(1f));
+            if (characterTransition.FadeOverlay != null)
+                yield return StartCoroutine(characterTransition.Fade(1f));
 
             var lastPosition = charactersData[currentPlayerIndex].instance.transform.position;
 
@@ -73,29 +67,10 @@ namespace CatchFire
             charactersData[currentPlayerIndex].instance.transform.position = lastPosition;
 
             //Fade in
-            if (fadeOverlay != null)
-                yield return StartCoroutine(Fade(0f));
+            if (characterTransition.FadeOverlay != null)
+                yield return StartCoroutine(characterTransition.Fade(0f));
 
             isSwitching = false;
         }
-
-        IEnumerator Fade(float targetAlpha)
-        {
-            var startAlpha = fadeOverlay.color.a;
-            var elapsed = 0f;
-
-            while (elapsed < fadeDuration)
-            {
-                elapsed += Time.deltaTime;
-                var newAlpha = Mathf.Lerp(startAlpha, targetAlpha, elapsed / fadeDuration);
-                fadeOverlay.color = new Color(0f, 0f, 0f, newAlpha);
-                yield return null;
-            }
-        }
     }
 }
-//TODO: Change Lerp
-//TODO: Separate this class
-//TODO: Implement add/remove characters by conditions
-//TODO: Implement detection by check others
-//TODO: Implement UI

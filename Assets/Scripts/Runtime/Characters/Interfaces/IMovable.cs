@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace CatchFire
 {
     public interface IMovable
@@ -8,6 +6,7 @@ namespace CatchFire
         float CurrentInputMagnitude { get; }
         float TargetSpeed { get; }
 
-        void HandleMovement(Vector2 moveInput, bool isSprinting, float deltaTime);
+        void ApplySprint(bool context);
+        void HandleMovement();
     }
 }

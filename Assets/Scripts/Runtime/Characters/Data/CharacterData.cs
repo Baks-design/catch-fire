@@ -6,11 +6,11 @@ namespace CatchFire
     public class CharacterData : CharacterDataBase
     {
         [Header("Movement")]
-        public bool analogMovement = false;
         public float moveSpeed = 2f;
         public float sprintSpeed = 5.335f;
-        [Range(0f, 0.3f)] public float rotationSmoothTime = 0.12f;
+        public float speedDecay = 16f;
         public float speedChangeRate = 25f;
+        [Range(0f, 0.3f)] public float rotationSmoothTime = 0.12f;
         [Header("Jumping")]
         public float jumpHeight = 1.2f;
         public float gravity = -15f;

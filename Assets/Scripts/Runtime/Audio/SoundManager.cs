@@ -15,42 +15,10 @@ namespace CatchFire
         readonly List<SoundEmitter> activeSoundEmitters = new();
         public readonly LinkedList<SoundEmitter> FrequentSoundEmitters = new();
 
-        void Awake() => ServiceLocator.Global.Register<ISoundService>(this);
-
-        void Start() => InitializePool();
-
-        public SoundBuilder CreateSoundBuilder() => new(this);
-
-        public bool CanPlaySound(SoundData data)
+        void Awake()
         {
-            if (!data.frequentSound) return true;
-
-            if (FrequentSoundEmitters.Count >= maxSoundInstances)
-            {
-                try
-                {
-                    FrequentSoundEmitters.First.Value.Stop();
-                    return true;
-                }
-                catch
-                {
-                    Debug.Log("SoundEmitter is already released");
-                }
-                return false;
-            }
-            return true;
-        }
-
-        public SoundEmitter Get() => soundEmitterPool.Get();
-
-        public void ReturnToPool(SoundEmitter soundEmitter) => soundEmitterPool.Release(soundEmitter);
-
-        public void StopAll()
-        {
-            foreach (var soundEmitter in activeSoundEmitters)
-                soundEmitter.Stop();
-
-            FrequentSoundEmitters.Clear();
+            ServiceLocator.Global.Register<ISoundService>(this);
+            InitializePool();
         }
 
         void InitializePool()
@@ -88,5 +56,39 @@ namespace CatchFire
         }
 
         void OnDestroyPoolObject(SoundEmitter soundEmitter) => Destroy(soundEmitter.gameObject);
+
+        public SoundBuilder CreateSoundBuilder() => new(this);
+
+        public bool CanPlaySound(SoundData data)
+        {
+            if (!data.frequentSound) return true;
+
+            if (FrequentSoundEmitters.Count >= maxSoundInstances)
+            {
+                try
+                {
+                    FrequentSoundEmitters.First.Value.Stop();
+                    return true;
+                }
+                catch
+                {
+                    Debug.Log("SoundEmitter is already released");
+                }
+                return false;
+            }
+            return true;
+        }
+
+        public SoundEmitter Get() => soundEmitterPool.Get();
+
+        public void ReturnToPool(SoundEmitter soundEmitter) => soundEmitterPool.Release(soundEmitter);
+
+        public void StopAll()
+        {
+            foreach (var soundEmitter in activeSoundEmitters)
+                soundEmitter.Stop();
+
+            FrequentSoundEmitters.Clear();
+        }
     }
 }

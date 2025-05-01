@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Character 1
   m_EditorClassIdentifier: 
   characterID: 1
-  analogMovement: 0
   moveSpeed: 2
   sprintSpeed: 5.335
+  speedDecay: 16
+  speedChangeRate: 10
   rotationSmoothTime: 0.12
-  speedChangeRate: 30
   jumpHeight: 1.2
-  gravity: -15
+  gravity: -1
   jumpTimeout: 0.5
   fallTimeout: 0.15
   groundLayers:

@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace CatchFire
 {
     public class CharacterFallingState : IState
@@ -11,19 +9,8 @@ namespace CatchFire
 
         public void Update()
         {
+            controller.GravityHandler.ApplyVerticalVelocity();
             controller.GroundChecker.CheckGrounded();
-
-            controller.JumpHandler.HandleJump(
-                controller.GroundChecker.Grounded,
-                controller.InputProvider.JumpPressed,
-                Time.deltaTime
-            );
-
-            controller.MovementHandler.HandleMovement(
-                controller.InputProvider.MoveInput,
-                controller.InputProvider.IsSprinting,
-                Time.deltaTime
-            );
         }
     }
 }

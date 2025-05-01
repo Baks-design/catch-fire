@@ -4,10 +4,13 @@ namespace CatchFire
 {
     public class CharacterMovementHandler : IMovable
     {
+        readonly IPlayerMapInput input;
+        private readonly IInputServices services;
         readonly CharacterData data;
         readonly CharacterController controller;
         readonly Transform transform;
         readonly Camera mainCamera;
+        bool isRunning;
         float targetRotation;
         float rotationVelocity;
         const float offset = 0.1f;
@@ -18,70 +21,74 @@ namespace CatchFire
         public float TargetSpeed { get; set; }
 
         public CharacterMovementHandler(
+            IPlayerMapInput input,
+            IInputServices services,
             CharacterData data,
             CharacterController controller,
             Transform transform,
             Camera mainCamera)
         {
+            this.input = input;
+            this.services = services;
             this.data = data;
             this.controller = controller;
             this.transform = transform;
             this.mainCamera = mainCamera;
         }
 
-        public void HandleMovement(Vector2 moveInput, bool isSprinting, float deltaTime)
+        public void ApplySprint(bool context) => isRunning = context;
+
+        public void HandleMovement()
         {
-            TargetSpeed = isSprinting ? data.sprintSpeed : data.moveSpeed;
-            if (moveInput == Vector2.zero)
+            CalculateSpeed(controller.velocity, TargetSpeed);
+            UpdateRotation();
+            MoveHorizontalVelocity();
+        }
+
+        void CalculateSpeed(Vector3 currentVelocity, float targetSpeed)
+        {
+            TargetSpeed = isRunning ? data.sprintSpeed : data.moveSpeed;
+            if (input.MoveInput == Vector2.zero)
                 TargetSpeed = 0f;
 
-            CurrentSpeed = CalculateSpeed(controller.velocity, TargetSpeed, moveInput, deltaTime);
+            CurrentSpeed = new Vector3(currentVelocity.x, 0f, currentVelocity.z).magnitude;
 
-            if (moveInput != Vector2.zero)
-                UpdateRotation(moveInput);
+            CurrentInputMagnitude = services.IsUsingKeyboard ? 1f : input.MoveInput.magnitude;
 
-            MoveHorizontalVelocity(deltaTime);
-        }
-
-        float CalculateSpeed(Vector3 currentVelocity, float targetSpeed, Vector2 moveInput, float deltaTime)
-        {
-            var currentHorizontalSpeed = new Vector3(currentVelocity.x, 0f, currentVelocity.z).magnitude;
-
-            CurrentInputMagnitude = data.analogMovement ? moveInput.magnitude : 1f;
-
-            if (currentHorizontalSpeed < targetSpeed - offset || currentHorizontalSpeed > targetSpeed + offset)
+            if (CurrentSpeed < targetSpeed - offset || CurrentSpeed > targetSpeed + offset)
             {
-
-                currentHorizontalSpeed = Mathf.Lerp(
-                    currentHorizontalSpeed,
+                CurrentSpeed = Maths.ExpDecay(
+                    CurrentSpeed,
                     targetSpeed * CurrentInputMagnitude,
-                    data.speedChangeRate * deltaTime
+                    data.speedDecay,
+                    data.speedChangeRate * Time.deltaTime
                 );
-                currentHorizontalSpeed = Mathf.Round(currentHorizontalSpeed * round) / round;
+                CurrentSpeed = Mathf.Round(CurrentSpeed * round) / round;
             }
             else
-                currentHorizontalSpeed = targetSpeed;
-
-            return currentHorizontalSpeed;
+                CurrentSpeed = targetSpeed;
         }
 
-        void UpdateRotation(Vector2 moveInput)
+        void UpdateRotation()
         {
-            var inputDirection = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
+            var inputDirection = new Vector3(input.MoveInput.x, 0f, input.MoveInput.y).normalized;
 
-            targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) *
-                            Mathf.Rad2Deg + mainCamera.transform.eulerAngles.y;
+            if (input.MoveInput != Vector2.zero)
+            {
+                targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) *
+                                Mathf.Rad2Deg + mainCamera.transform.eulerAngles.y;
 
-            var rotation = Mathf.SmoothDampAngle(
-                transform.eulerAngles.y, targetRotation, ref rotationVelocity, data.rotationSmoothTime);
+                var rotation = Mathf.SmoothDampAngle(
+                    transform.eulerAngles.y, targetRotation, ref rotationVelocity, data.rotationSmoothTime);
 
-            transform.rotation = Quaternion.Euler(0f, rotation, 0f);
+                transform.rotation = Quaternion.Euler(0f, rotation, 0f);
+            }
         }
 
-        void MoveHorizontalVelocity(float deltaTime)
+        void MoveHorizontalVelocity()
         {
             var targetDirection = Quaternion.Euler(0f, targetRotation, 0f) * Vector3.forward;
-            controller.Move(targetDirection.normalized * (CurrentSpeed * deltaTime));
+            controller.Move(targetDirection.normalized * (CurrentSpeed * Time.deltaTime));
         }
     }
 }
