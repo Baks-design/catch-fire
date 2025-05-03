@@ -4,13 +4,13 @@ namespace CatchFire
 {
     public enum SurfaceType
     {
-        Tile,
-        Rock
+        Rock,
+        Tile
     }
 
     public class SurfaceTag : MonoBehaviour
     {
         [field: SerializeField]
-        public SurfaceType SurfaceType { get; set; } = SurfaceType.Tile;
+        public SurfaceType SurfaceType { get; private set; }
     }
 }

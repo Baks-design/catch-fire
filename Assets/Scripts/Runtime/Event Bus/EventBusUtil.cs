@@ -13,7 +13,6 @@ namespace CatchFire
     {
         public static IReadOnlyList<Type> EventTypes { get; set; }
         public static IReadOnlyList<Type> EventBusTypes { get; set; }
-
 #if UNITY_EDITOR
         public static PlayModeStateChange PlayModeState { get; set; }
 
@@ -40,7 +39,7 @@ namespace CatchFire
         static void OnPlayModeStateChanged(PlayModeStateChange state)
         {
             PlayModeState = state;
-            if (state == PlayModeStateChange.ExitingPlayMode)
+            if (state is PlayModeStateChange.ExitingPlayMode)
                 ClearAllBuses();
         }
 #endif
@@ -68,7 +67,6 @@ namespace CatchFire
             {
                 var busType = typedef.MakeGenericType(eventType);
                 eventBusTypes.Add(busType);
-                Debug.Log($"Initialized EventBus<{eventType.Name}>");
             }
 
             return eventBusTypes;
@@ -79,7 +77,6 @@ namespace CatchFire
         /// </summary>
         public static void ClearAllBuses()
         {
-            Debug.Log("Clearing all buses...");
             for (var i = 0; i < EventBusTypes.Count; i++)
             {
                 var busType = EventBusTypes[i];

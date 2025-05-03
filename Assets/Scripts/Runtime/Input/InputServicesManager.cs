@@ -9,18 +9,14 @@ namespace CatchFire
 
         void Awake()
         {
+            DontDestroyOnLoad(this);
             inputServices = new InputServicesProvider();
-            inputServices.SetCursor(true);
         }
 
-        void OnEnable() => InputSystem.onEvent += inputServices.OnInputEvent;
+        void OnEnable() => InputSystem.onDeviceChange += inputServices.OnDeviceChanged;
 
-        void OnDestroy() => InputSystem.onEvent -= inputServices.OnInputEvent;
+        void OnDestroy() => InputSystem.onDeviceChange -= inputServices.OnDeviceChanged;
 
-        void Update()
-        {
-            Debug.Log("IsUsingMouse: " + inputServices.IsUsingMouse); //FIXME
-            Debug.Log("IsUsingKeyboard: " + inputServices.IsUsingKeyboard);
-        }
+        void Start() => inputServices.SetCursor(true);
     }
 }

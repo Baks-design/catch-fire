@@ -4,8 +4,7 @@ namespace CatchFire
     {
         readonly CharacterMovementController controller;
 
-        public CharacterGroundedState(CharacterMovementController controller)
-        => this.controller = controller;
+        public CharacterGroundedState(CharacterMovementController controller) => this.controller = controller;
 
         public void Update()
         {

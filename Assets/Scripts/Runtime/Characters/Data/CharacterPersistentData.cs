@@ -8,6 +8,5 @@ namespace CatchFire
     {
         public GameObject prefab;
         public GameObject instance;
-        public bool isActive;
     }
 }

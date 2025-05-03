@@ -5,57 +5,48 @@ namespace CatchFire
     public class CharacterMovementHandler : IMovable
     {
         readonly IPlayerMapInput input;
-        private readonly IInputServices services;
         readonly CharacterData data;
         readonly CharacterController controller;
         readonly Transform transform;
-        readonly Camera mainCamera;
-        bool isRunning;
-        float targetRotation;
-        float rotationVelocity;
-        const float offset = 0.1f;
-        const float round = 1000f;
+        Vector3 inputDirection;
 
-        public float CurrentSpeed { get; set; }
-        public float CurrentInputMagnitude { get; set; }
-        public float TargetSpeed { get; set; }
+        public bool IsMoving { get; private set; }
+        public bool IsRunning { get; private set; }
+        public float CurrentSpeed { get; private set; }
+        public float CurrentInputMagnitude { get; private set; }
+        public float TargetSpeed { get; private set; }
 
         public CharacterMovementHandler(
             IPlayerMapInput input,
-            IInputServices services,
             CharacterData data,
             CharacterController controller,
-            Transform transform,
-            Camera mainCamera)
+            Transform transform)
         {
             this.input = input;
-            this.services = services;
             this.data = data;
             this.controller = controller;
             this.transform = transform;
-            this.mainCamera = mainCamera;
         }
 
-        public void ApplySprint(bool context) => isRunning = context;
+        public void ApplySprint(bool context) => IsRunning = context;
 
         public void HandleMovement()
         {
             CalculateSpeed(controller.velocity, TargetSpeed);
-            UpdateRotation();
+            CalculateDirection();
             MoveHorizontalVelocity();
         }
 
         void CalculateSpeed(Vector3 currentVelocity, float targetSpeed)
         {
-            TargetSpeed = isRunning ? data.sprintSpeed : data.moveSpeed;
+            TargetSpeed = IsRunning ? data.sprintSpeed : data.moveSpeed;
             if (input.MoveInput == Vector2.zero)
                 TargetSpeed = 0f;
 
             CurrentSpeed = new Vector3(currentVelocity.x, 0f, currentVelocity.z).magnitude;
+            CurrentInputMagnitude = input.MoveInput.magnitude;
 
-            CurrentInputMagnitude = services.IsUsingKeyboard ? 1f : input.MoveInput.magnitude;
-
-            if (CurrentSpeed < targetSpeed - offset || CurrentSpeed > targetSpeed + offset)
+            if (CurrentSpeed < targetSpeed - 0.1f || CurrentSpeed > targetSpeed + 0.1f)
             {
                 CurrentSpeed = Maths.ExpDecay(
                     CurrentSpeed,
@@ -63,32 +54,24 @@ namespace CatchFire
                     data.speedDecay,
                     data.speedChangeRate * Time.deltaTime
                 );
-                CurrentSpeed = Mathf.Round(CurrentSpeed * round) / round;
+                CurrentSpeed = Mathf.Round(CurrentSpeed * 1000f) / 1000f;
             }
             else
                 CurrentSpeed = targetSpeed;
         }
 
-        void UpdateRotation()
+        void CalculateDirection()
         {
-            var inputDirection = new Vector3(input.MoveInput.x, 0f, input.MoveInput.y).normalized;
-
+            inputDirection = new Vector3(input.MoveInput.x, 0f, input.MoveInput.y).normalized;
             if (input.MoveInput != Vector2.zero)
-            {
-                targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) *
-                                Mathf.Rad2Deg + mainCamera.transform.eulerAngles.y;
-
-                var rotation = Mathf.SmoothDampAngle(
-                    transform.eulerAngles.y, targetRotation, ref rotationVelocity, data.rotationSmoothTime);
-
-                transform.rotation = Quaternion.Euler(0f, rotation, 0f);
-            }
+                inputDirection = transform.right * input.MoveInput.x + transform.forward * input.MoveInput.y;
         }
 
         void MoveHorizontalVelocity()
         {
-            var targetDirection = Quaternion.Euler(0f, targetRotation, 0f) * Vector3.forward;
-            controller.Move(targetDirection.normalized * (CurrentSpeed * Time.deltaTime));
+            controller.Move(inputDirection.normalized * (CurrentSpeed * Time.deltaTime));
+
+            IsMoving = controller.velocity.magnitude > 0.1f; 
         }
     }
 }

@@ -1,8 +1,12 @@
+using UnityEngine;
+
 namespace CatchFire
 {
     public interface IGroundedCheckable
     {
-        bool Grounded { get; }
+        RaycastHit IsHit { get; }
+        bool IsGrounded { get; }
+        bool IsLanded { get; }
 
         void CheckGrounded();
     }

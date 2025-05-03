@@ -4,13 +4,12 @@ namespace CatchFire
     {
         readonly CharacterMovementController controller;
 
-        public CharacterFallingState(CharacterMovementController controller)
-        => this.controller = controller;
+        public CharacterFallingState(CharacterMovementController controller) => this.controller = controller;
 
         public void Update()
         {
-            controller.GravityHandler.ApplyVerticalVelocity();
             controller.GroundChecker.CheckGrounded();
+            controller.GravityHandler.ApplyVerticalVelocity();
         }
     }
 }

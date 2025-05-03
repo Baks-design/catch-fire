@@ -17,6 +17,7 @@ namespace CatchFire
 
         void Awake()
         {
+            DontDestroyOnLoad(this);
             AssignInput();
             InitializeCharacters();
         }

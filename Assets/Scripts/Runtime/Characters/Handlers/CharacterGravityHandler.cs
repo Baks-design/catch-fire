@@ -26,23 +26,14 @@ namespace CatchFire
 
         public void ApplyVerticalVelocity()
         {
+            HandleStates();
             ApplyGravity();
             MoveVerticalVelocity();
         }
 
-        void ApplyGravity()
+        void HandleStates()
         {
-            const float terminalVelocity = -53f;
-
-            if (VerticalVelocity > terminalVelocity)
-                VerticalVelocity = Mathf.Max(terminalVelocity, VerticalVelocity + data.gravity * Time.deltaTime);
-        }
-
-        void MoveVerticalVelocity() => controller.Move(Time.deltaTime * VerticalVelocity * Vector3.up);
-
-        public void HandleStates()
-        {
-            if (grounded.Grounded)
+            if (grounded.IsGrounded)
                 HandleGroundedState();
             else
                 HandleAirborneState();
@@ -64,5 +55,15 @@ namespace CatchFire
             else
                 FreeFall = true;
         }
+
+        void ApplyGravity()
+        {
+            const float terminalVelocity = -53f;
+
+            if (VerticalVelocity > terminalVelocity)
+                VerticalVelocity = Mathf.Max(terminalVelocity, VerticalVelocity + data.gravity * Time.deltaTime);
+        }
+
+        void MoveVerticalVelocity() => controller.Move(Time.deltaTime * VerticalVelocity * Vector3.up);
     }
 }

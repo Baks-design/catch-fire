@@ -20,8 +20,8 @@ namespace CatchFire
         {
             Data = data;
 
-            foreach (var item in data.clip)
-                audioSource.clip = item;
+            for (var i = 0; i < data.clip.Length; i++)
+                audioSource.clip = data.clip[i];
             audioSource.outputAudioMixerGroup = data.mixerGroup;
             audioSource.loop = data.loop;
             audioSource.playOnAwake = data.playOnAwake;
@@ -60,7 +60,7 @@ namespace CatchFire
 
         IEnumerator WaitForSoundToEnd()
         {
-            yield return new WaitWhile(() => audioSource.isPlaying);
+            yield return Helpers.GetWaitForRealtimeSeconds(audioSource.clip.length);
             Stop();
         }
 
@@ -76,6 +76,7 @@ namespace CatchFire
             soundService.ReturnToPool(this);
         }
 
+        // Instead of applying immediately, prepare for next play
         public void WithRandomPitch(float min = -0.05f, float max = 0.05f)
         => audioSource.pitch += Random.Range(min, max);
     }

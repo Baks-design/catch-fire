@@ -5,7 +5,6 @@ namespace CatchFire
 	public class CharacterRigidBodyPushHandler : IRigidBodyPush
 	{
 		readonly CharacterData data;
-		const float minYThreshold = -0.3f;
 
 		public CharacterRigidBodyPushHandler(CharacterData data) => this.data = data;
 
@@ -16,7 +15,7 @@ namespace CatchFire
 			var bodyLayer = body.gameObject.layer;
 			if ((data.pushLayers.value & (1 << bodyLayer)) == 0) return;
 
-			if (hit.moveDirection.y < minYThreshold) return;
+			if (hit.moveDirection.y < -0.3f) return;
 
 			var pushDir = hit.moveDirection;
 			pushDir.y = 0f;

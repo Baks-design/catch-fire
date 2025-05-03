@@ -13,22 +13,26 @@ MonoBehaviour:
   m_Name: Character 1
   m_EditorClassIdentifier: 
   characterID: 1
-  moveSpeed: 2
-  sprintSpeed: 5.335
+  topClamp: 70
+  bottomClamp: -30
+  moveSpeed: 5
+  sprintSpeed: 10
   speedDecay: 16
   speedChangeRate: 10
-  rotationSmoothTime: 0.12
-  jumpHeight: 1.2
-  gravity: -1
-  jumpTimeout: 0.5
+  rotationSpeed: 2
+  maxSlopeAngle: 60
+  gravity: -15
   fallTimeout: 0.15
   groundLayers:
     serializedVersion: 2
     m_Bits: 1
-  groundedOffset: -0.14
-  groundedRadius: 0.28
+  groundedOffset: -0.25
+  surfaceCheckDistance: 0.1
+  groundedRadius: 0.25
   pushLayers:
     serializedVersion: 2
     m_Bits: 1
   canPush: 1
   strength: 5
+  walkStepInterval: 0.5
+  runStepInterval: 0.3

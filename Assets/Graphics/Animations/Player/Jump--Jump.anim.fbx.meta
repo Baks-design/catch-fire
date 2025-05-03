@@ -5,7 +5,7 @@ AssetOrigin:
   productId: 267961
   packageName: 'Starter Assets: Character Controllers | URP'
   packageVersion: 2.0.2
-  assetPath: Assets/Graphics/Animations/Player/Jump--Jump.anim.fbx
+  assetPath: Assets/Graphics/Animations/Jump--Jump.anim.fbx
   uploadId: 721456
 ModelImporter:
   serializedVersion: 22200
@@ -586,23 +586,23 @@ ModelImporter:
         length: 0
         modified: 0
     skeleton:
-    - name: Mannequin(Clone)
+    - name: Armature(Clone)
       parentName: 
       position: {x: -0, y: 0, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: Geometry
-      parentName: Mannequin(Clone)
+      parentName: Armature(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-    - name: Mannequin_Mesh
+    - name: Armature_Mesh
       parentName: Geometry
       position: {x: -0, y: 0, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: Skeleton
-      parentName: Mannequin(Clone)
+      parentName: Armature(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
@@ -909,7 +909,7 @@ ModelImporter:
     - name: Right_RingProximal
       parentName: Right_Hand
       position: {x: -0.00952738, y: -0.08161427, z: 0.012242128}
-      rotation: {x: -0.017649079, y: -0.6027014, z: -0.0040535578, w: 0.7977614}
+      rotation: {x: -0.017649077, y: -0.6027014, z: -0.0040535573, w: 0.7977614}
       scale: {x: 1, y: 1, z: 1}
     - name: Right_RingIntermediate
       parentName: Right_RingProximal

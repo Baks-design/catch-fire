@@ -13,7 +13,6 @@ namespace CatchFire
         public IGroundedCheckable GroundChecker { get; private set; }
         public IMovable MovementHandler { get; private set; }
         public ICharacterGravity GravityHandler { get; private set; }
-        IInputServices services;
 
         protected override void Awake()
         {
@@ -25,7 +24,6 @@ namespace CatchFire
 
         void AssignInputs()
         {
-            services = new InputServicesProvider();
             InputProvider = new PlayerMapInputProvider();
             InputProvider.MoveActionSetup();
             InputProvider.SprintActionSetup();
@@ -34,10 +32,9 @@ namespace CatchFire
 
         void InitComponents()
         {
-            GroundChecker = new CharacterGroundChecker(data, transform);
+            GroundChecker = new CharacterGroundChecker(data, controller);
             GravityHandler = new CharacterGravityHandler(data, controller, GroundChecker);
-            MovementHandler = new CharacterMovementHandler(
-                InputProvider, services, data, controller, transform, Camera.main);
+            MovementHandler = new CharacterMovementHandler(InputProvider, data, controller, transform);
             rigidBodyPush = new CharacterRigidBodyPushHandler(data);
         }
 
@@ -45,11 +42,9 @@ namespace CatchFire
         {
             var grounded = new CharacterGroundedState(this);
             var falling = new CharacterFallingState(this);
-            var jumping = new CharacterJumpingState(this);
 
-            At(grounded, falling, () => !GroundChecker.Grounded);
-            At(jumping, falling, () => !GroundChecker.Grounded && GravityHandler.VerticalVelocity < -0.1f);
-            At(falling, grounded, () => GroundChecker.Grounded);
+            At(grounded, falling, () => !GroundChecker.IsGrounded);
+            At(falling, grounded, () => GroundChecker.IsGrounded);
 
             stateMachine.SetState(falling);
         }
@@ -92,14 +87,36 @@ namespace CatchFire
 
         void OnDrawGizmosSelected()
         {
-            Gizmos.color = GroundChecker.Grounded ? Color.green : Color.red;
-
-            var pos = new Vector3(
+            var spherePos = new Vector3(
                 transform.position.x,
                 transform.position.y - data.groundedOffset,
-                transform.position.z);
+                transform.position.z
+            );
 
-            Gizmos.DrawSphere(pos, data.groundedRadius);
+            Gizmos.color = GroundChecker.IsGrounded ? Color.green : Color.red;
+            Gizmos.DrawWireSphere(spherePos, data.groundedRadius);
+
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(
+                spherePos,
+                spherePos + Vector3.down * data.surfaceCheckDistance
+            );
+
+            if (GroundChecker.IsGrounded)
+            {
+                Gizmos.color = Color.cyan;
+                Gizmos.DrawSphere(GroundChecker.IsHit.point, 0.05f);
+
+                Gizmos.color = Color.blue;
+                Gizmos.DrawRay(
+                    GroundChecker.IsHit.point,
+                    GroundChecker.IsHit.normal * 0.5f
+                );
+
+                Gizmos.color = Color.white;
+                Gizmos.DrawLine(spherePos, GroundChecker.IsHit.point);
+            }
         }
     }
 }
+//FIXME: Finished check controller charcter

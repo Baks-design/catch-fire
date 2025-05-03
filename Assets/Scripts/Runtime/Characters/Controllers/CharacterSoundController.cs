@@ -5,102 +5,108 @@ namespace CatchFire
 {
     public class CharacterSoundController : MonoBehaviour
     {
-        [SerializeField] LayerMask groundLayers;
-        [SerializeField] float surfaceCheckDistance = 0.1f;
-        [SerializeField] float surfaceCheckRadius = 0.1f;
-        [SerializeField] FootstepSurfaceData[] surfaceData;
-        Dictionary<SurfaceType, FootstepSurfaceData> surfaceLookup;
+        [SerializeField] CharacterMovementController movement;
+        [SerializeField] CharacterData characterData;
+        [SerializeField] FootstepsSoundLibrary[] surfaceData;
+        Dictionary<SurfaceType, FootstepsSoundLibrary> surfaceLookup;
         Transform tr;
         SoundBuilder soundBuilder;
         ISoundService soundService;
-        RaycastHit cachedHit;
-        FootstepSurfaceData cachedSurface;
-        float lastCheckTime;
-        const float SURFACECHECKCOOLDOWN = 0.1f;
-
-        void Awake()
-        {
-            tr = transform;
-            InitializeSurfaceDictionary();
-        }
+        float stepTimer;
 
         void Start()
         {
+            GetReference();
+            InitializeSurfaceDictionary();
+        }
+
+        void GetReference()
+        {
+            tr = transform;
             ServiceLocator.Global.Get(out soundService);
             soundBuilder = soundService.CreateSoundBuilder();
         }
 
         void InitializeSurfaceDictionary()
         {
-            surfaceLookup = new Dictionary<SurfaceType, FootstepSurfaceData>();
-            foreach (var data in surfaceData)
-                surfaceLookup[data.surfaceType] = data;
+            surfaceLookup = new Dictionary<SurfaceType, FootstepsSoundLibrary>();
+            for (var i = 0; i < surfaceData.Length; i++)
+                surfaceLookup[surfaceData[i].surfaceType] = surfaceData[i];
         }
 
-        internal void OnFootstep(AnimationEvent animationEvent)
+        void Update()
         {
-            if (animationEvent.animatorClipInfo.weight <= 0.5f) return;
-            PlayFootstepSound(GetCurrentSurface());
+            FootstepsHandler();
+            LandHandler();
         }
 
-        internal void OnLand(AnimationEvent animationEvent)
+        void FootstepsHandler()
         {
-            if (animationEvent.animatorClipInfo.weight <= 0.5f) return;
+            if (movement.GroundChecker.IsGrounded && movement.MovementHandler.IsMoving)
+            {
+                var currentStepInterval = GetCurrentStepInterval();
+                stepTimer += Time.deltaTime;
+                if (stepTimer >= currentStepInterval)
+                {
+                    PlayFootstepSound(GetCurrentSurface());
+                    stepTimer = 0f;
+                }
+            }
+            else
+                stepTimer = 0f;
+        }
+
+        void LandHandler()
+        {
+            if (!movement.GroundChecker.IsLanded)
+                return;
             PlayLandSound(GetCurrentSurface());
         }
 
-        void PlayFootstepSound(FootstepSurfaceData surface)
+        float GetCurrentStepInterval()
+        {
+            if (movement.MovementHandler.IsRunning)
+                return characterData.runStepInterval;
+            return characterData.walkStepInterval;
+        }
+
+        void PlayFootstepSound(FootstepsSoundLibrary surface)
         {
             if (surface == null) return;
 
             var clip = surface.footstepSounds[Random.Range(0, surface.footstepSounds.Length)];
             soundBuilder
+                .WithAssignParent(SoundBuilder.SoundTypes.Footstep)
                 .WithRandomPitch()
                 .WithPosition(tr.position)
                 .Play(clip);
         }
 
-        void PlayLandSound(FootstepSurfaceData surface)
+        void PlayLandSound(FootstepsSoundLibrary surface)
         {
             if (surface == null) return;
 
             var clip = surface.landSounds[Random.Range(0, surface.landSounds.Length)];
             soundBuilder
+                .WithAssignParent(SoundBuilder.SoundTypes.Land)
                 .WithRandomPitch()
                 .WithPosition(tr.position)
                 .Play(clip);
         }
 
-        FootstepSurfaceData GetCurrentSurface() //FIXME: iNIT Pool weird
+        FootstepsSoundLibrary GetCurrentSurface()
         {
-            if (Time.time - lastCheckTime < SURFACECHECKCOOLDOWN)
-                return cachedSurface;
-
-            lastCheckTime = Time.time;
-
             if (surfaceLookup == null || surfaceLookup.Count == 0)
-            {
-                cachedSurface = default;
                 return default;
-            }
 
-            if (Physics.SphereCast(
-                tr.position,
-                surfaceCheckRadius,
-                Vector3.down,
-                out cachedHit,
-                surfaceCheckDistance,
-                groundLayers))
+            if (movement.GroundChecker.IsGrounded)
             {
-                if (cachedHit.collider.TryGetComponent(out SurfaceTag surfaceTag) &&
-                    surfaceLookup.TryGetValue(surfaceTag.SurfaceType, out var data))
-                {
-                    cachedSurface = data;
+                var isGetComponent = movement.GroundChecker.IsHit.collider.TryGetComponent(out SurfaceTag surfaceTag);
+                var isGetValue = surfaceLookup.TryGetValue(surfaceTag.SurfaceType, out var data);
+                if (isGetComponent && isGetValue)
                     return data;
-                }
             }
 
-            cachedSurface = default;
             return default;
         }
     }

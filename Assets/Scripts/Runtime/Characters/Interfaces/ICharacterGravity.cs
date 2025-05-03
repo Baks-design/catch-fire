@@ -7,6 +7,5 @@ namespace CatchFire
         float FallTimeoutDelta { get; }
 
         void ApplyVerticalVelocity();
-        void HandleStates();
     }
 }

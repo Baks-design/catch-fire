@@ -17,13 +17,5 @@ namespace CatchFire
         /// <param name="obj">The object being checked.</param>
         /// <returns>The object itself if it exists and not destroyed, null otherwise.</returns>
         public static T OrNull<T>(this T obj) where T : Object => obj ? obj : null;
-
-        public static T GetOrAdd<T>(this GameObject gameObject) where T : Component
-        {
-            var component = gameObject.GetComponent<T>();
-            if (!component)
-                component = gameObject.AddComponent<T>();
-            return component;
-        }
     }
 }

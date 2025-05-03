@@ -4,9 +4,10 @@ using UnityEngine.Pool;
 
 namespace CatchFire
 {
-    public class SoundManager : MonoBehaviour, ISoundService
+    public class SoundManager : MonoBehaviour, ISoundService 
     {
         [SerializeField] SoundEmitter soundEmitterPrefab;
+        [SerializeField] ParentGroups parentGroups;
         [SerializeField] bool collectionCheck = true;
         [SerializeField] int defaultCapacity = 10;
         [SerializeField] int maxPoolSize = 100;
@@ -15,11 +16,15 @@ namespace CatchFire
         readonly List<SoundEmitter> activeSoundEmitters = new();
         public readonly LinkedList<SoundEmitter> FrequentSoundEmitters = new();
 
+        public ParentGroups ParentGroups => parentGroups;
+
         void Awake()
         {
+            DontDestroyOnLoad(this);
             ServiceLocator.Global.Register<ISoundService>(this);
-            InitializePool();
         }
+
+        void Start() => InitializePool();
 
         void InitializePool()
         => soundEmitterPool = new ObjectPool<SoundEmitter>(
@@ -57,7 +62,7 @@ namespace CatchFire
 
         void OnDestroyPoolObject(SoundEmitter soundEmitter) => Destroy(soundEmitter.gameObject);
 
-        public SoundBuilder CreateSoundBuilder() => new(this);
+        public SoundBuilder CreateSoundBuilder() => new SoundBuilder(this);
 
         public bool CanPlaySound(SoundData data)
         {
@@ -85,8 +90,8 @@ namespace CatchFire
 
         public void StopAll()
         {
-            foreach (var soundEmitter in activeSoundEmitters)
-                soundEmitter.Stop();
+            for (var i = 0; i < activeSoundEmitters.Count; i++)
+                activeSoundEmitters[i].Stop();
 
             FrequentSoundEmitters.Clear();
         }

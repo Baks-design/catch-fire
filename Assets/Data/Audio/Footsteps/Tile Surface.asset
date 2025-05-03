@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1d99aa073a523341a8af2b7ce82d76c, type: 3}
   m_Name: Tile Surface
   m_EditorClassIdentifier: 
-  surfaceType: 0
+  surfaceType: 1
   footstepSounds:
   - clip:
     - {fileID: 8300000, guid: b993df4a93c1d304ab19d8b2eb88c9a5, type: 3}

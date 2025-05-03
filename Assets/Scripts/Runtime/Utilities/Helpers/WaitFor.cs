@@ -8,6 +8,7 @@ namespace CatchFire
         static readonly WaitForFixedUpdate fixedUpdate = new();
         static readonly WaitForEndOfFrame endOfFrame = new();
         static readonly Dictionary<float, WaitForSeconds> WaitForSecondsDict = new(100, new FloatComparer());
+        static readonly Dictionary<float, WaitForSecondsRealtime> WaitForRealtimeSecondsDict = new(100, new FloatComparer());
 
         public static WaitForFixedUpdate FixedUpdate => fixedUpdate;
         public static WaitForEndOfFrame EndOfFrame => endOfFrame;
@@ -26,10 +27,18 @@ namespace CatchFire
             return forSeconds;
         }
 
-        class FloatComparer : IEqualityComparer<float>
+        public static WaitForSecondsRealtime RealtimeSeconds(float seconds)
         {
-            public bool Equals(float x, float y) => Mathf.Abs(x - y) <= Mathf.Epsilon;
-            public int GetHashCode(float obj) => obj.GetHashCode();
+            if (seconds < 1f / Application.targetFrameRate)
+                return null;
+
+            if (!WaitForRealtimeSecondsDict.TryGetValue(seconds, out var forSeconds))
+            {
+                forSeconds = new WaitForSecondsRealtime(seconds);
+                WaitForRealtimeSecondsDict[seconds] = forSeconds;
+            }
+
+            return forSeconds;
         }
     }
 }

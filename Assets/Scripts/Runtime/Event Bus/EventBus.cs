@@ -25,10 +25,6 @@ namespace CatchFire
             }
         }
 
-        internal static void Clear()
-        {
-            Debug.Log($"Clearing {typeof(T).Name} bindings");
-            bindings.Clear();
-        }
+        internal static void Clear() => bindings.Clear();
     }
 }
