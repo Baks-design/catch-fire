@@ -26,6 +26,5 @@ namespace CatchFire
                 yield return null;
             }
         }
-
     }
 }

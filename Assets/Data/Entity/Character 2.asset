@@ -13,22 +13,153 @@ MonoBehaviour:
   m_Name: Character 2
   m_EditorClassIdentifier: 
   characterID: 2
-  moveSpeed: 2
-  sprintSpeed: 5.335
+  topClamp: 70
+  bottomClamp: -30
+  smoothAmount: 10
+  cameraSpeedDecay: 16
+  zoomFOV: 40
+  runFOVDecay: 16
+  zoomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  zoomTransitionDuration: 0.25
+  runFOV: 70
+  zoomFOVDecay: 16
+  runCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  runTransitionDuration: 0.75
+  runReturnTransitionDuration: 0.5
+  swayAmount: 1
+  swaySpeed: 1
+  returnSpeed: 3
+  changeDirectionMultiplier: 4
+  swayDecay: 16
+  moveBackwardsSpeedPercent: 0.5
+  moveSideSpeedPercent: 0.7
+  swayCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2.6845634
+      outSlope: 2.6845634
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.055934515
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 0
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  noiseData: {fileID: 11400000, guid: 60228d4659e63dc4388a4b24195d0f00, type: 2}
+  x: 0
+  y: 1
+  z: 0
+  moveSpeed: 3
+  canRunThreshold: 0.7
+  runTransitionCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  sprintSpeed: 6
   speedDecay: 16
   speedChangeRate: 10
-  rotationSmoothTime: 0.12
-  jumpHeight: 1.2
-  gravity: -1
-  jumpTimeout: 0.5
+  maxSlopeAngle: 60
+  smoothRotateSpeed: 5
+  rotationDecay: 16
+  gravity: -15
   fallTimeout: 0.15
+  smoothFinalDirectionSpeed: 10
+  smoothInputSpeed: 10
+  smoothVelocitySpeed: 3
+  smoothHeadBobSpeed: 5
   groundLayers:
     serializedVersion: 2
     m_Bits: 1
-  groundedOffset: -0.14
-  groundedRadius: 0.28
+  groundedOffset: -0.25
+  surfaceCheckDistance: 0.1
+  groundedRadius: 0.25
+  obstacleLayers:
+    serializedVersion: 2
+    m_Bits: 1
+  rayObstacleLength: 0.4
+  rayObstacleSphereRadius: 0.2
   pushLayers:
     serializedVersion: 2
     m_Bits: 1
   canPush: 1
   strength: 5
+  walkStepInterval: 0.5
+  runStepInterval: 0.3

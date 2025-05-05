@@ -18,7 +18,6 @@ namespace CatchFire
             get => onEvent;
             set => onEvent = value;
         }
-
         Action IEventBinding<T>.OnEventNoArgs
         {
             get => onEventNoArgs;

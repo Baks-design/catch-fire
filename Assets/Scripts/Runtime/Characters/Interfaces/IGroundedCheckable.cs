@@ -4,10 +4,13 @@ namespace CatchFire
 {
     public interface IGroundedCheckable
     {
-        RaycastHit IsHit { get; }
-        bool IsGrounded { get; }
         bool IsLanded { get; }
+        bool IsGrounded { get; }
+        RaycastHit IsGroundHit { get; }
+        bool IsHitWall { get; }
+        RaycastHit IsObstacleHit { get; }
 
+        void CheckObstacle();
         void CheckGrounded();
     }
 }

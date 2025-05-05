@@ -4,7 +4,7 @@ namespace CatchFire
     {
         bool FreeFall { get; }
         float VerticalVelocity { get; }
-        float FallTimeoutDelta { get; }
+        float InAirTimer { get; }
 
         void ApplyVerticalVelocity();
     }

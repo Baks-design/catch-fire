@@ -101,7 +101,7 @@ namespace CatchFire
 
             if (movement.GroundChecker.IsGrounded)
             {
-                var isGetComponent = movement.GroundChecker.IsHit.collider.TryGetComponent(out SurfaceTag surfaceTag);
+                var isGetComponent = movement.GroundChecker.IsGroundHit.collider.TryGetComponent(out SurfaceTag surfaceTag);
                 var isGetValue = surfaceLookup.TryGetValue(surfaceTag.SurfaceType, out var data);
                 if (isGetComponent && isGetValue)
                     return data;

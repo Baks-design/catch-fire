@@ -10,9 +10,10 @@ namespace CatchFire
 
         public CharacterData GetCharacterById(string id)
         {
-            foreach (var character in allCharacters)
-                if (character.characterID == id)
-                    return character;
+            for (var i = 0; i < allCharacters.Count; i++)
+                if (allCharacters[i].characterID == id)
+                    return allCharacters[i];
+
             return null;
         }
     }

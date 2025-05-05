@@ -10,6 +10,7 @@ namespace CatchFire
         {
             controller.GroundChecker.CheckGrounded();
             controller.GravityHandler.ApplyVerticalVelocity();
+            controller.MovementHandler.HandleMovement(controller.GroundChecker);
         }
     }
 }

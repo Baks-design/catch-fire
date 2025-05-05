@@ -48,12 +48,10 @@ MonoBehaviour:
   defaultSpawn: {fileID: 0}
   spawnGroup: {fileID: 0}
   charactersData:
-  - prefab: {fileID: 3576245321243747931, guid: 815e1678fbd9f6940b151131c98475ba, type: 3}
+  - prefab: {fileID: 6863664765525169005, guid: 53767d84868458848ba82b029564b841, type: 3}
     instance: {fileID: 0}
-    isActive: 0
-  - prefab: {fileID: 3576245321243747931, guid: 45bbd8efdcc49554eafda73e016364b5, type: 3}
+  - prefab: {fileID: 6367460414691622344, guid: 45bbd8efdcc49554eafda73e016364b5, type: 3}
     instance: {fileID: 0}
-    isActive: 0
   characterTransition: {fileID: 4287635154148688534}
 --- !u!114 &4287635154148688534
 MonoBehaviour:
@@ -67,6 +65,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6650cdaf84e84094aab7c75dae437a70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeDecay: 16
   fadeDuration: 1
+  fadeDecay: 16
   fadeOverlay: {fileID: 0}

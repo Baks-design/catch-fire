@@ -6,7 +6,6 @@ namespace CatchFire
 {
     public class CharactersManager : MonoBehaviour
     {
-        [Header("Main")]
         [SerializeField] Transform defaultSpawn;
         [SerializeField] Transform spawnGroup;
         [SerializeField] CharacterPersistentData[] charactersData;
