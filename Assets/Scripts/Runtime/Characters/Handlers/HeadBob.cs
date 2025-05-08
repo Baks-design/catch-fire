@@ -4,12 +4,12 @@ namespace CatchFire
 {
     public class HeadBob
     {
-        readonly HeadBobData data;
+        readonly HeadBobData headBobData;
         Vector3 finalOffset;
         float xScroll;
         float yScroll;
         bool resetted;
-        float currentStateHeight = 0f;
+        float currentStateHeight;
 
         public Vector3 FinalOffset => finalOffset;
         public bool Resetted => resetted;
@@ -19,13 +19,14 @@ namespace CatchFire
             set => currentStateHeight = value;
         }
 
-        public HeadBob(HeadBobData data, float moveBackwardsMultiplier, float moveSideMultiplier)
+        public HeadBob(CharacterData data, HeadBobData headBobData)
         {
-            this.data = data;
+            this.headBobData = headBobData;
 
-            data.MoveBackwardsFrequencyMultiplier = moveBackwardsMultiplier;
-            data.MoveSideFrequencyMultiplier = moveSideMultiplier;
+            headBobData.MoveBackwardsFrequencyMultiplier = data.moveBackwardsSpeedPercent;
+            headBobData.MoveSideFrequencyMultiplier = data.moveSideSpeedPercent;
 
+            currentStateHeight = 0f;
             xScroll = 0f;
             yScroll = 0f;
 
@@ -43,23 +44,23 @@ namespace CatchFire
 
             resetted = false;
 
-            amplitudeMultiplier = running ? data.runAmplitudeMultiplier : 1f;
-            amplitudeMultiplier = crouching ? data.crouchAmplitudeMultiplier : amplitudeMultiplier;
+            amplitudeMultiplier = running ? headBobData.runAmplitudeMultiplier : 1f;
+            amplitudeMultiplier = crouching ? headBobData.crouchAmplitudeMultiplier : amplitudeMultiplier;
 
-            frequencyMultiplier = running ? data.runFrequencyMultiplier : 1f;
-            frequencyMultiplier = crouching ? data.crouchFrequencyMultiplier : frequencyMultiplier;
+            frequencyMultiplier = running ? headBobData.runFrequencyMultiplier : 1f;
+            frequencyMultiplier = crouching ? headBobData.crouchFrequencyMultiplier : frequencyMultiplier;
 
-            additionalMultiplier = input.y == -1f ? data.MoveBackwardsFrequencyMultiplier : 1f;
-            additionalMultiplier = input.x != 0f & input.y == 0f ? data.MoveSideFrequencyMultiplier : additionalMultiplier;
+            additionalMultiplier = input.y == -1f ? headBobData.MoveBackwardsFrequencyMultiplier : 1f;
+            additionalMultiplier = input.x != 0f & input.y == 0f ? headBobData.MoveSideFrequencyMultiplier : additionalMultiplier;
 
-            xScroll += Time.deltaTime * data.xFrequency * frequencyMultiplier;
-            yScroll += Time.deltaTime * data.yFrequency * frequencyMultiplier;
+            xScroll += Time.deltaTime * headBobData.xFrequency * frequencyMultiplier;
+            yScroll += Time.deltaTime * headBobData.yFrequency * frequencyMultiplier;
 
-            xValue = data.xCurve.Evaluate(xScroll);
-            yValue = data.yCurve.Evaluate(yScroll);
+            xValue = headBobData.xCurve.Evaluate(xScroll);
+            yValue = headBobData.yCurve.Evaluate(yScroll);
 
-            finalOffset.x = xValue * data.xAmplitude * amplitudeMultiplier * additionalMultiplier;
-            finalOffset.y = yValue * data.yAmplitude * amplitudeMultiplier * additionalMultiplier;
+            finalOffset.x = xValue * headBobData.xAmplitude * amplitudeMultiplier * additionalMultiplier;
+            finalOffset.y = yValue * headBobData.yAmplitude * amplitudeMultiplier * additionalMultiplier;
         }
 
         public void ResetHeadBob()

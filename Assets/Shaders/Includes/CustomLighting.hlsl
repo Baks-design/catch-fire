@@ -83,7 +83,7 @@ void AdditionalLights_float(
 {
     float3 diffuseColor = 0;
     float3 specularColor = 0;
-
+    
 #ifndef SHADERGRAPH_PREVIEW
     Smoothness = exp2(10 * Smoothness + 1);
     WorldNormal = normalize(WorldNormal);
@@ -129,5 +129,4 @@ void AdditionalLights_half(
     Diffuse = diffuseColor;
     Specular = specularColor;
 }
-
 #endif

@@ -44,6 +44,7 @@ namespace CatchFire
         [Header("Move")]
         [Min(2f)] public float moveSpeed = 3f;
         [Min(5f)] public float sprintSpeed = 6f;
+        [Min(5f)] public float jumpSpeed = 3f;
 
         [Header("Rotation")]
         public float smoothRotateSpeed = 5f;
@@ -67,20 +68,38 @@ namespace CatchFire
         [Range(1f, 25f)] public float smoothSpeedDecay = 16f;
         public float smoothHeadBobSpeed = 5f;
         [Range(1f, 25f)] public float smoothHeadBobSpeedDecay = 16f;
+
+        [Header("Crouch Settings")]
+        [Range(0.2f, 0.9f)] public float crouchPercent = 0.6f;
+        [Min(1f)] public float crouchDecay = 16f;
+        public float crouchTransitionDuration = 1f;
+        public AnimationCurve crouchTransitionCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+
+        [Header("Landing Settings")]
+        [Range(0.05f, 0.5f)] public float lowLandAmount = 0.1f;
+        [Range(0.2f, 0.9f)] public float highLandAmount = 0.6f;
+        public float landTimer = 0.5f;
+        public float landDuration = 1f;
+        public AnimationCurve landCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
         #endregion
 
         #region Checks
         [Header("Grounding")]
         public LayerMask groundLayers;
-        [Range(-0.5f, 0.5f)] public float groundedOffset = -0.25f;
-        [Range(0.1f, 1f)] public float surfaceCheckDistance = 0.1f;
-        [Range(0.1f, 1f)] public float groundedRadius = 0.25f;
+        public float groundedOffset = -0.25f;
+        public float surfaceCheckDistance = 0.1f;
         [Min(50)] public float maxSlopeAngle = 60f;
 
         [Header("Obstacle")]
         public LayerMask obstacleLayers = ~0;
-        [Range(0f, 1f)] public float rayObstacleLength = 0.4f;
-        [Range(0.01f, 1f)] public float rayObstacleSphereRadius = 0.2f;
+        public float obstacleOffset = 0.4f;
+        public float rayObstacleLength = 0.4f;
+        public float rayObstacleSphereRadius = 0.2f;
+
+        [Header("Roof")]
+        public LayerMask roofLayer = ~0;
+        public float roofOffset = -0.25f;
+        public float roofCheckDistance = 0.1f;
 
         [Header("Push")]
         public LayerMask pushLayers;
@@ -92,6 +111,13 @@ namespace CatchFire
         [Header("Audio")]
         [Range(0.5f, 1f)] public float walkStepInterval = 0.5f;
         [Range(0.3f, 1f)] public float runStepInterval = 0.3f;
+        #endregion
+
+        #region Audio
+        [Header("Interaction")]
+        public LayerMask interactableLayer = ~0;
+        public float rayDistance = 0.3f;
+        public float raySphereRadius = 0.3f;
         #endregion
     }
 }

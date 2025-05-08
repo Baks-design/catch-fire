@@ -2,19 +2,19 @@ using UnityEngine;
 
 namespace CatchFire
 {
-    public class CharacterMovementHandler : IMovable
+    public class CharacterMovementHandler 
     {
         readonly IPlayerMapInput input;
         readonly CharacterData data;
         readonly CharacterController controller;
         readonly Transform transform;
         readonly Transform yawTransform;
+        readonly float walkRunSpeedDifference;
         Vector3 smoothFinalMoveDir;
         Vector3 finalMoveVector;
         float currentSpeed;
         float smoothCurrentSpeed;
         float finalSmoothCurrentSpeed;
-        readonly float walkRunSpeedDifference;
 
         public bool IsMoving { get; private set; }
         public bool IsRunning { get; private set; }
@@ -37,11 +37,11 @@ namespace CatchFire
             this.transform = transform;
             this.yawTransform = yawTransform;
 
-            walkRunSpeedDifference = data.sprintSpeed - data.moveSpeed;
             controller.center = new Vector3(0f, controller.height / 2f + controller.skinWidth, 0f);
+            walkRunSpeedDifference = data.sprintSpeed - data.moveSpeed;
         }
 
-        public void HandleMovement(IGroundedCheckable grounded)
+        public void HandleMovement(CharacterGroundChecker grounded)
         {
             CalculateSpeed();
             SmoothInput();
@@ -84,17 +84,20 @@ namespace CatchFire
 
             if (IsRunning && CanRun())
             {
-                var walkRunPercent = Maths.InvExpDecay(smoothCurrentSpeed, data.moveSpeed, data.sprintSpeed, data.walkToRunDecay);
-                finalSmoothCurrentSpeed = data.runTransitionCurve.Evaluate(walkRunPercent) * walkRunSpeedDifference + data.moveSpeed;
+                var walkRunPercent = Maths.InvExpDecay(
+                    smoothCurrentSpeed, data.moveSpeed, data.sprintSpeed, data.walkToRunDecay);
+                finalSmoothCurrentSpeed = data.runTransitionCurve.Evaluate(walkRunPercent) *
+                    walkRunSpeedDifference + data.moveSpeed;
             }
             else
                 finalSmoothCurrentSpeed = smoothCurrentSpeed;
         }
 
         void SmoothDir() => smoothFinalMoveDir = Maths.ExpDecay(
-            smoothFinalMoveDir, FinalMoveDir, data.smoothDirectionalDecay, Time.deltaTime * data.smoothFinalDirectionSpeed);
+            smoothFinalMoveDir, FinalMoveDir, data.smoothDirectionalDecay,
+            Time.deltaTime * data.smoothFinalDirectionSpeed);
 
-        void CalculateMovementDirection(IGroundedCheckable grounded)
+        void CalculateMovementDirection(CharacterGroundChecker grounded)
         {
             var vDir = transform.forward * SmoothInputVector.y;
             var hDir = transform.right * SmoothInputVector.x;
@@ -105,7 +108,7 @@ namespace CatchFire
             FinalMoveDir = flattenDir;
         }
 
-        Vector3 FlattenVectorOnSlopes(Vector3 vectorToFlat, IGroundedCheckable grounded)
+        Vector3 FlattenVectorOnSlopes(Vector3 vectorToFlat, CharacterGroundChecker grounded)
         {
             if (grounded.IsGrounded)
                 vectorToFlat = Vector3.ProjectOnPlane(vectorToFlat, grounded.IsGroundHit.normal);

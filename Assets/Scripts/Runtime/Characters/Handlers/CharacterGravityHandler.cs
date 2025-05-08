@@ -2,13 +2,12 @@ using UnityEngine;
 
 namespace CatchFire
 {
-    public class CharacterGravityHandler : ICharacterGravity
+    public class CharacterGravityHandler
     {
         readonly CharacterData data;
         readonly CharacterController controller;
 
-        public bool FreeFall { get; private set; }
-        public float VerticalVelocity { get; private set; }
+        public float VerticalVelocity { get; set; }
         public float InAirTimer { get; private set; }
 
         public CharacterGravityHandler(
@@ -41,6 +40,6 @@ namespace CatchFire
             }
         }
 
-        void MoveVerticalVelocity() => controller.Move(Time.deltaTime * VerticalVelocity * Vector3.up);
+        void MoveVerticalVelocity() => controller.Move(VerticalVelocity * Time.deltaTime * Vector3.up);
     }
 }

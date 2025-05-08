@@ -8,9 +8,9 @@ namespace CatchFire
 
         public void Update()
         {
-            controller.GroundChecker.CheckGrounded();
+            controller.CollisionController.GroundChecker.CheckGrounded();
             controller.GravityHandler.ApplyVerticalVelocity();
-            controller.MovementHandler.HandleMovement(controller.GroundChecker);
+            controller.MovementHandler.HandleMovement(controller.CollisionController.GroundChecker);
         }
     }
 }
